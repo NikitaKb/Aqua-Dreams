@@ -1,5 +1,5 @@
 <template>
-  <header :class="['header', { 'header--dark': isDark }]">
+  <header :class="[{ 'static-white': staticWhite }, 'header', { 'header--dark': isDark }]">
     <div class="container">
       <div class="header-content">
         <NuxtLink to="/" class="logo">
@@ -53,8 +53,12 @@
   </header>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, defineProps } from 'vue'
+
+defineProps({
+  staticWhite: Boolean, // Add a prop to enable static white styling
+});
 
 const isDark = ref(false)
 const isMenuOpen = ref(false)
@@ -103,6 +107,12 @@ onUnmounted(() => {
 
 .header--dark {
   background: #fff;
+}
+
+.static-white {
+  background-color: white;
+  color: black;
+  /* Add other styles as needed */
 }
 
 .container {
@@ -260,4 +270,4 @@ onUnmounted(() => {
   background: #E5E5E5;
   z-index: 1;
 }
-</style> 
+</style>
