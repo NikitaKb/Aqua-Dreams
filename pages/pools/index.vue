@@ -1,9 +1,10 @@
 <template>
 
 <main>
+  
 <PoolsPage />
 <PoolTypes class="pool-types-section" />
-<Contacts />
+<Contacts class="margin" />
 
 </main>
 
@@ -17,5 +18,8 @@ import Footer from '@/components/Footer.vue';
 <style scoped>
 .pool-types-section {
   margin-top: 86px;
+}
+.margin{
+  margin-top: 100px;
 }
 </style>

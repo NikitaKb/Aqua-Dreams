@@ -1,8 +1,9 @@
 <template>
 <main>
+    
 <TermoPage />
 <TermoTypes />
-<Contacts />
+<Contacts class="margin-top-100" />
 
 </main>
 </template>

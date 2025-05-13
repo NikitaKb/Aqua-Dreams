@@ -73,7 +73,7 @@ const handleSubmit = () => {
 
 <style scoped>
 .contacts {
- 
+ margin-top: 100px;
   background: #fff;
 }
 

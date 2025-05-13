@@ -6,19 +6,17 @@ import Header from '~/components/Header.vue'; // Import the Header component
 
 <template>
 
-<main>
-  <!-- Add the Header component with a prop for static white styling -->
-  <AboutUsHero />
-  <ExperienceBlock />
-  <Company />
-  <Certificates />
-  <Portfolio />
-  <Contacts />
-</main>
+  <main>
+    <Header static-white />
+    <AboutUsHero />
+    <ExperienceBlock />
+    <Company />
+    <Certificates />
+    <Portfolio />
+    <Contacts />
+  </main>
 
 </template>
 
 
-<style scoped>
-
-</style>
+<style scoped></style>
