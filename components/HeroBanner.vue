@@ -71,4 +71,20 @@
     padding: 0 16px;
   }
 }
+
+@media (max-width: 1024px) {
+  .hero-logo {
+    height: 100px;
+    width: 250px;
+    margin-bottom: 16px;
+  }
+  .hero-subtitle {
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-top: 16px;
+  }
+  .container {
+    padding: 0 16px;
+  }
+}
 </style> 

@@ -4,18 +4,18 @@
       <div class="pool-main-block">
         <div class="pool-image-block">
           <div class="pool-slider">
-            <img :src="currentImage" :alt="poolTitle" class="pool-main-image" />
-            <button v-if="images.length > 1" class="slider-arrow left" @click="prevImage">&#60;</button>
-            <button v-if="images.length > 1" class="slider-arrow right" @click="nextImage">&#62;</button>
+            <img :src="currentImage" :alt="poolData.name" class="pool-main-image" />
+            <button v-if="poolData.images && poolData.images.length > 1" class="slider-arrow left" @click="prevImage">&#60;</button>
+            <button v-if="poolData.images && poolData.images.length > 1" class="slider-arrow right" @click="nextImage">&#62;</button>
           </div>
         </div>
         <div class="pool-info-block">
-          <h1 class="pool-title">{{ poolTitle }}</h1>
-          <p class="pool-description">{{ poolDescription }}</p>
+          <h1 class="pool-title">{{ poolData.name }}</h1>
+          <p class="pool-description">{{ poolData.description_short }}</p>
           <button class="pool-consult-btn" @click="showModal = true">Бесплатная консультация</button>
         </div>
       </div>
-      <div class="pool-advantages-block">
+      <div class="pool-advantages-block" v-if="poolData.advantages && poolData.advantages.length > 0">
         <h2 class="advantages-title">Преимущества</h2>
         <div class="advantages-columns">
           <div class="advantages-col">
@@ -57,102 +57,60 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue';
+import { computed, ref, reactive, onMounted } from 'vue';
 import { defineProps } from 'vue';
+
+interface Advantage {
+  title: string;
+  text: string;
+}
+
+interface PoolData {
+  id: number;
+  name: string;
+  description_short: string;
+  description: string | null;
+  slug: string;
+  images?: string[];
+  advantages?: Advantage[];
+}
 
 const props = defineProps<{ type: string }>();
 
-const poolTitles: Record<string, string> = {
-  concrete: 'Бетонный бассейн',
-  composite: 'Композитный бассейн',
-  frame: 'Каркасный бассейн',
-  spa: 'СПА-бассейн',
-  fun: 'Каркасный бассейн Fun',
-  polymer: 'Бассейн из пластиковых полимерных панелей',
-  formwork: 'Бассейн из несъёмной бетонной опалубки',
-};
-
-const poolDescriptions: Record<string, string> = {
-  concrete: 'Бассейн под ключ – это комплексное решение, включающее проектирование, строительство и отделку бассейна из монолитного бетона. Такой вариант отличается высокой прочностью, долговечностью и возможностью создания индивидуальной формы и размера.',
-  composite: 'Композитные бассейны — это цельные чаши из современных материалов, отличающиеся быстрым монтажом, долговечностью и разнообразием форм. Отличный выбор для тех, кто ценит комфорт и стиль.',
-  frame: 'Каркасные бассейны — это сборные конструкции, простые в установке и обслуживании. Идеальны для сезонного использования и семейного отдыха на даче.',
-  spa: 'СПА-бассейн — это компактное решение для релаксации и гидромассажа, подходящее для дома или улицы. Позволяет наслаждаться водными процедурами круглый год.',
-  fun: 'Каркасные бассейны Fun — это легкие и мобильные бассейны, которые быстро собираются и разбираются. Отличный вариант для летнего отдыха всей семьёй.',
-  polymer: 'Бассейны из пластиковых полимерных панелей — это современное и высокотехнологичное решение для создания мест для купания и отдыха как на открытом воздухе, так и в помещении.',
-  formwork: 'Бассейн из несъёмной бетонной опалубки — это надежное и долговечное решение для создания индивидуального водоема на вашем участке. Отличается простотой монтажа и высокой прочностью.',
-};
-
-const poolImages: Record<string, string[]> = {
-  concrete: ['/images/b-pools.png'],
-  composite: ['/images/kom-pools.png'],
-  frame: ['/images/kar-pools.png'],
-  spa: ['/images/spa-pools.png'],
-  fun: ['/images/fun-pools.png'],
-  polymer: ['/images/pl-pools.png'],
-  formwork: ['/images/bo-pools.png'],
-};
-
-const poolAdvantages: Record<string, {title: string, text: string}[]> = {
-  concrete: [
-    { title: 'Прочность и долговечность', text: 'Бетонные бассейны очень прочные и устойчивы к различным воздействиям, включая перепады температур и влажности.' },
-    { title: 'Возможность создания различных форм и размеров', text: 'Бетон позволяет создавать бассейны любой формы и размера, как традиционные, так и фигурные.' },
-    { title: 'Индивидуальный дизайн', text: 'Бетонный бассейн можно облицевать разными материалами, такими как плитка, мозаика, камень, что позволяет создать уникальный дизайн.' },
-    { title: 'Устойчивость к высоким нагрузкам', text: 'Бетон выдерживает большие нагрузки, что делает его подходящим для различных типов бассейнов.' },
-  ],
-  composite: [
-    { title: 'Быстрый монтаж', text: 'Композитные бассейны устанавливаются за считанные дни благодаря цельной чаше.' },
-    { title: 'Гладкая поверхность', text: 'Современные материалы обеспечивают приятную на ощупь и безопасную поверхность.' },
-    { title: 'Долговечность', text: 'Композит устойчив к химии и ультрафиолету, не требует сложного ухода.' },
-    { title: 'Разнообразие форм', text: 'Большой выбор форм и размеров на любой вкус.' },
-  ],
-  frame: [
-    { title: 'Быстрая сборка', text: 'Каркасный бассейн можно собрать самостоятельно без специальных навыков.' },
-    { title: 'Доступная цена', text: 'Каркасные бассейны — один из самых бюджетных вариантов для дачи.' },
-    { title: 'Мобильность', text: 'Легко разобрать и убрать на зиму, можно перевозить.' },
-    { title: 'Безопасность', text: 'Современные материалы и конструкции обеспечивают безопасность для детей.' },
-  ],
-  spa: [
-    { title: 'Гидромассаж', text: 'СПА-бассейны оснащены форсунками для массажа и релаксации.' },
-    { title: 'Компактность', text: 'Подходят для установки даже в небольших помещениях или на улице.' },
-    { title: 'Круглогодичное использование', text: 'Можно использовать в любое время года.' },
-    { title: 'Легкость ухода', text: 'Современные системы фильтрации и очистки.' },
-  ],
-  fun: [
-    { title: 'Легкость и мобильность', text: 'Бассейн Fun легко перемещать и устанавливать в любом месте участка.' },
-    { title: 'Яркий дизайн', text: 'Весёлые расцветки и формы понравятся детям и взрослым.' },
-    { title: 'Безопасность', text: 'Мягкие борта и дно обеспечивают безопасность для малышей.' },
-    { title: 'Быстрая установка', text: 'Собирается за 30-60 минут без инструментов.' },
-  ],
-  polymer: [
-    { title: 'Простота монтажа', text: 'Панельные бассейны быстро собираются и не требуют сложных работ.' },
-    { title: 'Долговечность', text: 'Пластиковые панели устойчивы к коррозии и химии.' },
-    { title: 'Лёгкость конструкции', text: 'Меньший вес по сравнению с бетонными чашами.' },
-    { title: 'Вариативность отделки', text: 'Можно облицевать плиткой, лайнером или мозаикой.' },
-  ],
-  formwork: [
-    { title: 'Прочность', text: 'Несъёмная опалубка обеспечивает дополнительную жёсткость конструкции.' },
-    { title: 'Теплоизоляция', text: 'Сохраняет тепло воды дольше, экономит энергию.' },
-    { title: 'Быстрый монтаж', text: 'Сборка и заливка чаши занимают меньше времени.' },
-    { title: 'Долговечность', text: 'Служит десятилетиями без потери качества.' },
-  ],
-};
-
-const poolTitle = computed(() => poolTitles[props.type] || props.type);
-const poolDescription = computed(() => poolDescriptions[props.type] || '');
-const images = computed(() => poolImages[props.type] || ['/images/b-pools.png']);
-const advantages = computed(() => poolAdvantages[props.type] || poolAdvantages['concrete']);
-
-const leftAdvantages = computed(() => [advantages.value[0], advantages.value[2]]);
-const rightAdvantages = computed(() => [advantages.value[1], advantages.value[3]]);
+const poolData = ref<PoolData>({
+  id: 0,
+  name: '',
+  description_short: '',
+  description: '',
+  slug: '',
+  images: ['/images/b-pools.png'],
+  advantages: []
+});
 
 const currentIndex = ref(0);
-const currentImage = computed(() => images.value[currentIndex.value]);
+const currentImage = computed(() => {
+  const images = poolData.value.images || ['/images/b-pools.png'];
+  return images[currentIndex.value] || '/images/b-pools.png';
+});
+
+const leftAdvantages = computed(() => {
+  const advantages = poolData.value.advantages || [];
+  return [advantages[0], advantages[2]];
+});
+
+const rightAdvantages = computed(() => {
+  const advantages = poolData.value.advantages || [];
+  return [advantages[1], advantages[3]];
+});
 
 function prevImage() {
-  currentIndex.value = (currentIndex.value - 1 + images.value.length) % images.value.length;
+  const images = poolData.value.images || ['/images/b-pools.png'];
+  currentIndex.value = (currentIndex.value - 1 + images.length) % images.length;
 }
+
 function nextImage() {
-  currentIndex.value = (currentIndex.value + 1) % images.value.length;
+  const images = poolData.value.images || ['/images/b-pools.png'];
+  currentIndex.value = (currentIndex.value + 1) % images.length;
 }
 
 const showModal = ref(false);
@@ -162,8 +120,38 @@ const form = reactive({
   phone: '',
 });
 
+async function fetchPoolData() {
+  try {
+    console.log('Fetching pool data for type:', props.type);
+    const response = await fetch(`http://127.0.0.1:8000/api/pools/${props.type}/`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch pool data: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log('Received data from API:', data);
+    
+    poolData.value = {
+      ...data,
+      images: data.images || ['/images/b-pools.png'],
+      advantages: data.advantages || []
+    };
+    console.log('Processed pool data:', poolData.value);
+  } catch (error) {
+    console.error('Error fetching pool data:', error);
+    // Fallback data in case of error
+    poolData.value = {
+      id: 0,
+      name: 'Бассейн',
+      description_short: 'Информация о бассейне временно недоступна',
+      description: null,
+      slug: props.type,
+      images: ['/images/b-pools.png'],
+      advantages: []
+    };
+  }
+}
+
 function submitConsultation() {
-  // Логируем данные и инфо о кнопке
   console.log('Была нажата кнопка: Бесплатная консультация');
   console.log('Данные пользователя:', {
     firstName: form.firstName,
@@ -171,11 +159,14 @@ function submitConsultation() {
     phone: form.phone,
   });
   showModal.value = false;
-  // Очищаем форму (по желанию)
   form.firstName = '';
   form.lastName = '';
   form.phone = '';
 }
+
+onMounted(() => {
+  fetchPoolData();
+});
 </script>
 
 <style scoped>

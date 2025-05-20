@@ -19,6 +19,9 @@
 
       <!-- Второй блок -->
       <div class="bath-block bath-block-reverse">
+        <div class="bath-image">
+          <img src="/images/module_1.png" alt="Плавающее солярное покрытие" />
+        </div>
         <div class="bath-content">
           <h2 class="bath-title">Плавающее солярное покрытие</h2>
           <p class="bath-description">
@@ -27,9 +30,6 @@
           <div class="button-wrapper">
             <a href="#" class="button-primary">Оставить заявление</a>
           </div>
-        </div>
-        <div class="bath-image">
-          <img src="/images/module_1.png" alt="Плавающее солярное покрытие" />
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@
 }
 
 .bath-block-reverse {
-  flex-direction: row-reverse;
+  flex-direction: row;
 }
 
 .bath-content {
@@ -96,7 +96,7 @@
 .bath-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+
 }
 
 .button-wrapper {
@@ -122,7 +122,7 @@
   color: white;
 }
 
-@media (max-width: 1360px) {
+/* @media (max-width: 1360px) {
   .bath-block {
     flex-direction: column;
     position: relative;
@@ -185,7 +185,7 @@
     color: white;
     border: none;
   }
-}
+} */
 
 @media (max-width: 749px) {
   .bath-block {
@@ -246,6 +246,56 @@
   .button-primary {
     font-size: 12px;
     padding: 10px 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .bath-block,
+  .bath-block-reverse {
+    flex-direction: row;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 60px;
+  }
+  .bath-content {
+    width: 50%;
+    max-width: 100%;
+    padding: 0;
+  }
+  .bath-image {
+    width: 50%;
+    max-width: 100%;
+    height: 330px;
+    border-radius: 0;
+    overflow: hidden;
+  }
+  .bath-title {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #C77D47;
+  }
+  .bath-block-reverse .bath-title {
+    color: #23A3FF;
+  }
+  .bath-description {
+    font-size: 16px;
+    margin-bottom: 24px;
+    color: #333;
+  }
+  .button-primary {
+    background: transparent;
+    color: #23A3FF;
+    border: 1px solid #23A3FF;
+    font-size: 16px;
+    padding: 16px 40px;
+  }
+  .button-primary:hover {
+    background: #23A3FF;
+    color: white;
   }
 }
 </style> 

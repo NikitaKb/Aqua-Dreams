@@ -369,7 +369,7 @@ const prevSlide = () => {
   width: 40px;
   height: 40px;
   border: none;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0);
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -417,6 +417,14 @@ const prevSlide = () => {
     min-width: calc(50% - 15px);
     height: 560px;
     width: 660px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .project-card {
+    min-width: 470px;
+    height: 380px;
+    width: 470px;
   }
 }
 

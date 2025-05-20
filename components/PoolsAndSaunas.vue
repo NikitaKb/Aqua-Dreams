@@ -240,44 +240,39 @@
 }
 
 @media (max-width: 1024px) {
-  .services-section {
-    padding: 80px 0;
+  .pools-section {
+    padding-left: 32px;
+    padding-right: 32px;
   }
-
-  .section-title {
-    font-size: 32px;
-    margin-bottom: 10px;
-  }
-
-  .section-description {
-    font-size: 16px;
-    margin-bottom: 40px;
-  }
-
   .services-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
-
-  .service-card {
-    height: 300px;
+  .grid-row {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
   }
-
-  .service-content {
-    padding: 20px;
+  .service-card,
+  .service-card.large {
+    height: 260px;
+    max-width: 100%;
   }
-
+  /* Первый ряд */
+  .grid-row:nth-child(1) .service-card:first-child { width: 520px; }
+  .grid-row:nth-child(1) .service-card:last-child { width: 420px; }
+  /* Второй ряд */
+  .grid-row:nth-child(2) .service-card:first-child { width: 420px; }
+  .grid-row:nth-child(2) .service-card:last-child { width: 520px; }
+  /* Третий ряд */
+  .grid-row:nth-child(3) .service-card:first-child { width: 520px; }
+  .grid-row:nth-child(3) .service-card:last-child { width: 420px; }
   .service-title {
-    font-size: 24px;
+    font-size: 28px;
   }
-
-  .service-description {
-    font-size: 14px;
-  }
-
-  .service-button {
-    padding: 10px 20px;
-    font-size: 14px;
+  .service-overlay {
+    padding: 20px;
   }
 }
 

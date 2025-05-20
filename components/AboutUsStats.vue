@@ -1,17 +1,29 @@
 <template>
   <section class="about-stats">
-    <img src="/images/wave.svg" alt="Волна" class="wave-decoration" />
+    <img 
+      v-if="!isMobile" 
+      src="/images/wave.svg" 
+      alt="Волна" 
+      class="wave-decoration" 
+    />
+    <img 
+      v-else 
+      src="/images/wave-s.svg" 
+      alt="Волна" 
+      class="wave-decoration" 
+    />
     <div class="container">
       <div class="content-wrapper">
         <div class="stats-images">
-          <img src="/images/img_stats.png" alt="О нас" class="stats-image" />
+          <div class="stats-image-bg"></div>
+          <img src="/public/images/img_stats.png" alt="О нас" class="stats-image" />
         </div>
         <div class="stats-block">
           <h2 class="section-title">О НАС В ЦИФРАХ</h2>
           <div class="stats-numbers">
             <div class="stat-item">
               <div class="stat-value">25</div>
-              <div class="stat-description">Лет успешного строительства</div>
+              <div class="stat-description">Лет строительства</div>
             </div>
             <div class="separator">|</div>
             <div class="stat-item">
@@ -35,9 +47,23 @@
   </section>
 </template>
 
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const isMobile = ref(false);
+
+const checkScreenSize = () => {
+  isMobile.value = window.innerWidth <= 1024;
+};
+
+onMounted(() => {
+  checkScreenSize();
+  window.addEventListener('resize', checkScreenSize);
+});
+</script>
+
 <style scoped>
 .about-stats {
-
   background: #fff;
   position: relative;
   overflow: hidden;
@@ -56,7 +82,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 30px;
+  gap: 20px
+ 
 }
 
 .stats-images {
@@ -86,6 +113,7 @@
 .stats-numbers {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   flex-wrap: nowrap;
 }
@@ -148,43 +176,64 @@
 }
 
 @media (max-width: 1024px) {
+  .container {
+    padding: 0 32px;
+  }
   .content-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+  }
+  .stats-images {
+    width: 412px;
+    height: 371px;
+    min-width: 412px;
+    min-height: 371px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+  .stats-image {
+    width: 412px;
+    height: 371px;
+    border-radius: 32px;
+    object-fit: cover;
+  }
+  .stats-block {
+    margin: 0 auto;
+    display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    box-sizing: border-box;
   }
-
-  .stats-images {
-    width: 100%;
-    max-width: 719px;
-    height: auto;
-    aspect-ratio: 719/647;
-  }
-
-  .stats-block {
-    width: 100%;
-    padding-top: 20px;
-  }
-
   .section-title {
-    text-align: center;
-    font-size: 42px;
+    color: #000;
+    font-size: 35px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    margin-right: 220px;
   }
-
   .stats-numbers {
+    display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
+    flex-wrap: nowrap;
   }
-
   .stat-item {
-    text-align: center;
+    text-align: left;
   }
-
-  .separator {
-    display: none;
+  .stat-value {
+    font-size: 32px;
+    font-weight: 600;
+    color: #23A3FF;
   }
-
   .stat-description {
-    margin: 0 auto;
+    font-size: 16px;
+    color: #333;
+    max-width: 100px;
   }
 }
 
