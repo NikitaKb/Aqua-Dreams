@@ -64,7 +64,7 @@
 
 <style scoped>
 .pools-section {
-  
+ padding-top: 100px;
   margin: 0 auto;
 }
 
@@ -152,14 +152,16 @@
 
 /* Desktop (1440px) */
 @media (max-width: 1440px) {
+  .pools-section {
+    width: 1160px;
+    margin: 0 auto;
+  }
   .section-title {
     font-size: 48px;
   }
-
   .section-description {
     font-size: 16px;
   }
-
   .service-title {
     font-size: 32px;
   }

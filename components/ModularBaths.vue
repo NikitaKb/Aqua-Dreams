@@ -110,7 +110,7 @@
 .bath-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  
 }
 
 .button-wrapper {
@@ -266,7 +266,9 @@
 
 @media (max-width: 1440px) {
   .container {
-    max-width: 1200px;
+    width: 1360px;
+    max-width: 100%;
+    margin: 0 auto;
   }
   .bath-block {
     gap: 24px;
@@ -286,13 +288,15 @@
 
 @media (max-width: 1024px) {
   .container {
-    max-width: 900px;
+    max-width: 1024px;
+    width: 1024px;
     padding-left: 32px;
     padding-right: 32px;
+    box-sizing: border-box;
   }
   .bath-block,
   .bath-block-reverse {
-    flex-direction: row;
+   
     gap: 24px;
     align-items: center;
     margin-bottom: 60px;
@@ -341,15 +345,19 @@
 @media (max-width: 768px) {
   .container {
     max-width: 748px;
-    padding: 0;
+    padding: 0 8px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .bath-block,
   .bath-block-reverse {
     display: flex;
     flex-direction: column;
     max-width: 748px;
-    margin: 0 auto 60px auto;
+    margin: 0 auto 32px auto;
     gap: 0;
+    align-items: center;
+    width: 100%;
   }
   .bath-content {
     width: 100%;
@@ -359,36 +367,53 @@
     display: block;
   }
   .bath-title {
-    font-size: 32px;
-    margin-bottom: 20px;
+    font-size: 24px;
+    margin-bottom: 12px;
     text-align: center;
+    font-weight: 500;
   }
   .bath-description {
-    font-size: 16px;
-    margin-bottom: 24px;
+    font-size: 15px;
+    margin-bottom: 16px;
     text-align: center;
+    line-height: 1.5;
   }
   .bath-image {
-    width: 748px;
-    height: auto;
-    border-radius: 20px;
-    margin: 0 auto 24px auto;
+    width: 100%;
+    max-width: 600px;
+    height: 260px;
+    border-radius: 16px;
+    margin: 0 auto 12px auto;
     overflow: hidden;
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .bath-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 16px;
     display: block;
   }
   .button-wrapper {
     display: flex;
     justify-content: center;
-    margin-top: 24px;
+    margin-top: 12px;
     margin-bottom: 0;
     align-self: unset;
+  }
+  .button-primary {
+    font-size: 15px;
+    padding: 12px 0;
+    width: 180px;
+    border-radius: 100px;
+    text-align: center;
+    border: 1px solid #23A3FF;
+    color: #23A3FF;
+    background: #fff;
+    font-weight: 500;
+    transition: all 0.3s ease;
   }
 }
 
@@ -413,11 +438,16 @@
   }
   .container {
     padding: 0 4px;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
   .bath-block {
+    width: 100%;
+    max-width: 100vw;
     flex-direction: column !important;
     align-items: center;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
     gap: 0;
   }
   .bath-content {
@@ -431,6 +461,7 @@
     font-size: 18px;
     margin-bottom: 8px;
     text-align: center;
+    font-weight: 500;
   }
   .bath-block-reverse .bath-title {
     color: #23A3FF;
@@ -439,16 +470,14 @@
     font-size: 13px;
     margin-bottom: 12px;
     text-align: center;
+    line-height: 1.5;
   }
   .bath-image {
-    width: 355px !important;
-    min-width: 355px !important;
-    max-width: 355px !important;
-    height: 195px !important;
-    min-height: 195px !important;
-    max-height: 195px !important;
+    width: 100%;
+    max-width: 355px;
+    height: 195px;
+    margin: 0 auto 8px auto;
     border-radius: 16px;
-    margin: 0 auto 16px auto;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -474,6 +503,11 @@
     width: 180px;
     border-radius: 100px;
     text-align: center;
+    border: 1px solid #23A3FF;
+    color: #23A3FF;
+    background: #fff;
+    font-weight: 500;
+    transition: all 0.3s ease;
   }
 }
 </style> 

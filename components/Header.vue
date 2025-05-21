@@ -36,7 +36,7 @@
               </transition>
             </li>
             <li class="nav-item">
-              <NuxtLink to="/products" class="nav-link">ТОВАРЫ</NuxtLink>
+              <NuxtLink to="/catalog" class="nav-link">ТОВАРЫ</NuxtLink>
             </li>
             <li class="nav-item">
               <NuxtLink to="/about" class="nav-link">О НАС</NuxtLink>

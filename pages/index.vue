@@ -1,3 +1,8 @@
+<script setup lang="ts">
+
+
+</script>
+
 <template>
     <div>
       
@@ -9,7 +14,7 @@
         <AboutUsStats />
         <OurProjects />
         <Contacts />
-    
+   <Catalog />
         
       </main>
     </div>
