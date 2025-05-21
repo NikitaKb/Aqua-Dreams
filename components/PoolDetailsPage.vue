@@ -57,12 +57,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, onMounted } from 'vue';
+import { computed, ref, reactive, onMounted, watch } from 'vue';
 import { defineProps } from 'vue';
+import { useRoute } from 'vue-router';
 
 interface Advantage {
   title: string;
   text: string;
+}
+
+interface PoolImage {
+  image_url: string;
 }
 
 interface PoolData {
@@ -71,7 +76,7 @@ interface PoolData {
   description_short: string;
   description: string | null;
   slug: string;
-  images?: string[];
+  images: PoolImage[];
   advantages?: Advantage[];
 }
 
@@ -83,14 +88,19 @@ const poolData = ref<PoolData>({
   description_short: '',
   description: '',
   slug: '',
-  images: ['/images/b-pools.png'],
+  images: [{ image_url: '/images/b-pools.png' }],
   advantages: []
 });
 
 const currentIndex = ref(0);
+const BASE_URL = 'http://localhost:8000';
+
 const currentImage = computed(() => {
-  const images = poolData.value.images || ['/images/b-pools.png'];
-  return images[currentIndex.value] || '/images/b-pools.png';
+  const images = poolData.value.images || [];
+  if (images.length === 0) return '/images/b-pools.png';
+  const imgObj = images[currentIndex.value];
+  if (!imgObj || !imgObj.image_url) return '/images/b-pools.png';
+  return imgObj.image_url.startsWith('http') ? imgObj.image_url : BASE_URL + imgObj.image_url;
 });
 
 const leftAdvantages = computed(() => {
@@ -120,10 +130,21 @@ const form = reactive({
   phone: '',
 });
 
-async function fetchPoolData() {
+const route = useRoute();
+
+const getType = (t: string | string[]) => Array.isArray(t) ? t[0] : t;
+
+onMounted(() => {
+  fetchPoolData(getType(route.params.type));
+});
+watch(() => route.params.type, (newType) => {
+  fetchPoolData(getType(newType));
+});
+
+async function fetchPoolData(type: string) {
   try {
-    console.log('Fetching pool data for type:', props.type);
-    const response = await fetch(`http://127.0.0.1:8000/api/pools/${props.type}/`);
+    console.log('Fetching pool data for type:', type);
+    const response = await fetch(`http://127.0.0.1:8000/api/pools/${type}/`);
     if (!response.ok) {
       throw new Error(`Failed to fetch pool data: ${response.status} ${response.statusText}`);
     }
@@ -132,7 +153,7 @@ async function fetchPoolData() {
     
     poolData.value = {
       ...data,
-      images: data.images || ['/images/b-pools.png'],
+      images: data.images || [{ image_url: '/images/b-pools.png' }],
       advantages: data.advantages || []
     };
     console.log('Processed pool data:', poolData.value);
@@ -144,8 +165,8 @@ async function fetchPoolData() {
       name: 'Бассейн',
       description_short: 'Информация о бассейне временно недоступна',
       description: null,
-      slug: props.type,
-      images: ['/images/b-pools.png'],
+      slug: type,
+      images: [{ image_url: '/images/b-pools.png' }],
       advantages: []
     };
   }
@@ -163,16 +184,12 @@ function submitConsultation() {
   form.lastName = '';
   form.phone = '';
 }
-
-onMounted(() => {
-  fetchPoolData();
-});
 </script>
 
 <style scoped>
 .pool-details-page {
   background: #fff;
-  min-height: 100vh;
+  
   padding: 40px 0 0 0;
 }
 

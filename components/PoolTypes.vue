@@ -5,59 +5,12 @@
       <p class="section-subtitle">Ваш уголок отдыха и гармонии прямо у дома.</p>
       
       <div class="pool-cards">
-        <div class="pool-card">
-          <img src="/images/b-pools.png" alt="Бетонный бассейн" class="pool-image">
+        <div class="pool-card" v-for="pool in pools" :key="pool.id">
+          <img :src="`http://127.0.0.1:8000${pool.main_image_url}`" :alt="pool.name" class="pool-image">
           <div class="pool-content">
-            <h3 class="pool-title">Бетонный бассейн</h3>
-            <p class="pool-description">
-              Бетонные бассейны — это долговечные и надежные конструкции, позволяющие создавать бассейн любой формы и размера. Они дополняют внешний вид любого участка и могут стать его изюминкой. Такие бассейны идеально подходят как для загородных домов, так и для коммерческих объектов, обеспечивая комфортное времяпрепровождение.
-            </p>
-            <NuxtLink to="/pools/concrete" class="pool-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="pool-card">
-          <img src="/images/kom-pools.png" alt="Композитный бассейн" class="pool-image">
-          <div class="pool-content">
-            <h3 class="pool-title">Композитный бассейн</h3>
-            <p class="pool-description">
-              Композитные бассейны - это бассейны, изготовленные из многослойного композитного материала высокой прочности, армированного стекловолокном и покрытого гелькоутом. Эти бассейны представляют собой цельную конструкцию, которая доставляется на объект в готовом виде.
-            </p>
-
-            <NuxtLink to="/pools/composite" class="pool-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="pool-card">
-          <img src="/images/kar-pools.png" alt="Каркасные бассейны Fun" class="pool-image">
-          <div class="pool-content">
-            <h3 class="pool-title">Каркасные бассейны Fun</h3>
-            <p class="pool-description">
-              Каркасные бассейны - это сборные конструкции, где чаша опирается на прочный и разборный каркас. Эти бассейны отличаются простотой монтажа, доступной ценой и универсальностью конструкции.
-            </p>
-            <NuxtLink to="/pools/fun" class="pool-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="pool-card">
-          <img src="/images/pl-pools.png" alt="Бассейн из пластиковых полимерных панелей" class="pool-image">
-          <div class="pool-content">
-            <h3 class="pool-title">Бассейн из пластиковых полимерных панелей</h3>
-            <p class="pool-description">
-              Бассейны из пластиковых полимерных панелей - это современное и высокотехнологичное решение для создания мест для купания и отдыха как на открытом воздухе, так и в помещении. Эти бассейны отличаются простотой монтажа, прочностью и достойным внешним видом.
-            </p>
-            <NuxtLink to="/pools/polymer" class="pool-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="pool-card">
-          <img src="/images/bo-pools.png" alt="Бассейн из несъёмной бетонной опалубки" class="pool-image">
-          <div class="pool-content">
-            <h3 class="pool-title">Бассейн из несъёмной бетонной опалубки</h3>
-            <p class="pool-description">
-              Бассейн из несъемной бетонной опалубки - это надежное и долговечное решение для создания индивидуального водоема на вашем участке. Эта технология обеспечивает простоту в установке и конструкции, обеспечивая долговечность, высокую прочность и минимальные потери тепла при нагреве воды.
-            </p>
-            <NuxtLink to="/pools/formwork" class="pool-button">Подробнее</NuxtLink>
+            <h3 class="pool-title">{{ pool.name }}</h3>
+            <p class="pool-description">{{ pool.description_short }}</p>
+            <NuxtLink :to="`/pools/${pool.slug}`" class="pool-button">Подробнее</NuxtLink>
           </div>
         </div>
       </div>
@@ -66,7 +19,14 @@
 </template>
 
 <script setup>
-// Компонент с видами бассейнов
+import { ref, onMounted } from 'vue';
+
+const pools = ref([]);
+
+onMounted(async () => {
+  const res = await fetch('http://localhost:8000/api/pools/');
+  pools.value = await res.json();
+});
 </script>
 
 <style scoped>

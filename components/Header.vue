@@ -15,10 +15,10 @@
                 <div v-show="activeDropdown === 'pools'" class="dropdown-menu pools-dropdown">
                   <NuxtLink to="/pools/concrete" class="dropdown-item">Бетонный бассейн</NuxtLink>
                   <NuxtLink to="/pools/composite" class="dropdown-item">Композитный бассейн</NuxtLink>
-                  <NuxtLink to="/pools/frame" class="dropdown-item">Каркасные бассейны</NuxtLink>
-                  <NuxtLink to="/pools/fun" class="dropdown-item">Fun Бассейн</NuxtLink>
-                  <NuxtLink to="/pools/polymer" class="dropdown-item">Бассейн из пластиковых полимерных панелей</NuxtLink>
-                  <NuxtLink to="/pools/formwork" class="dropdown-item">Бассейн из несъёмной бетонной опалубки</NuxtLink>
+                  <NuxtLink to="/pools/karkasnye-bassejny-fun" class="dropdown-item">Каркасные бассейны</NuxtLink>
+                  <NuxtLink to="/pools/karkasnye-bassejny-fun" class="dropdown-item">Fun Бассейн</NuxtLink>
+                  <NuxtLink to="/pools/bassejn-iz-plastikovyh-polimernyh-panelej" class="dropdown-item">Бассейн из пластиковых полимерных панелей</NuxtLink>
+                  <NuxtLink to="/pools/bassejn-iz-nesyomnoj-betonnoj-opalubki" class="dropdown-item">Бассейн из несъёмной бетонной опалубки</NuxtLink>
                 </div>
               </transition>
             </li>
@@ -74,6 +74,13 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, defineProps } from 'vue'
 
+
+const pools = ref([]);
+
+onMounted(async () => {
+  const res = await fetch('http://localhost:8000/api/pools/');
+  pools.value = await res.json();
+});
 const props = defineProps({
   staticWhite: Boolean,
 });
