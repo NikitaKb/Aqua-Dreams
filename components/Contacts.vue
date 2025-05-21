@@ -96,6 +96,8 @@ const handleSubmit = () => {
 .contacts-map {
   flex: 1;
   height: 560px;
+  width: 100%;
+  transition: all 0.3s ease;
 }
 
 .map-image {
@@ -209,6 +211,11 @@ const handleSubmit = () => {
   color: #23A3FF;
   font-weight: 400;
 }
+.contact-value-p{
+  font-size: 16px;
+  color: #23A3FF;
+  font-weight: 400;
+}
 
 .contact-label {
   font-size: 16px;
@@ -227,10 +234,97 @@ const handleSubmit = () => {
 
   .contacts-map {
     height: 400px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .contacts {
+    margin-top: 60px;
+  }
+  
+  .contacts-content {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: stretch;
+  }
+  
+  .contacts-form {
+    max-width: 50%;
+    height: 415px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .form {
+    margin-bottom: 20px;
+  }
+  
+  .additional-contacts {
+    margin-top: auto;
+  }
+
+  .contact-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .contact-item:first-child {
+    display: none;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .contacts-map {
+    width: 450px;
+    height: 415px;
+    flex-shrink: 0;
+  }
+  
+  .map-image {
+    object-fit: cover;
+  }
+  
+  .contacts-title {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+  
+  .contacts-subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .form-input {
+    font-size: 14px;
+    height: 48px;
+    padding: 0 18px;
+  }
+  
+  .submit-button {
+    font-size: 14px;
+    height: 48px;
+    width: 200px;
+  }
+  
+  .contact-icon {
+    width: 36px;
+    height: 36px;
   }
 }
 
 @media (max-width: 768px) {
+  .contacts {
+    display: none;
+  }
+
   .contacts-title {
     font-size: 42px;
   }

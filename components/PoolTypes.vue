@@ -178,28 +178,28 @@
   }
 
   .pool-cards {
-    gap: 20px;
+    gap: 16px;
   }
 
   .pool-card {
-    height: 350px;
+    height: 260px;
   }
 
   .pool-content {
-    padding: 30px;
+    padding: 20px;
   }
 
   .pool-title {
-    font-size: 28px;
+    font-size: 24px;
   }
 
   .pool-description {
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .pool-button {
-    padding: 10px 20px;
-    font-size: 14px;
+    font-size: 12px;
+    padding: 8px 16px;
   }
 }
 
