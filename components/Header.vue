@@ -2,6 +2,11 @@
   <header :class="[{ 'static-white': staticWhite }, 'header', { 'header--dark': isDark }]">
     <div class="container">
       <div class="header-content">
+        <button class="burger-menu" @click="toggleMenu" :class="{ 'active': isMenuOpen }" aria-label="Меню">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
         <NuxtLink to="/" class="logo">
           <img
             :src="staticWhite ? '/images/logo_dark.svg' : (isDark ? '/images/logo_dark.svg' : '/images/wave-logo.svg')"
@@ -43,14 +48,13 @@
             </li>
           </ul>
         </nav>
-        <button class="burger-menu" @click="toggleMenu" :class="{ 'active': isMenuOpen }">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
       </div>
     </div>
     <div class="mobile-menu" :class="{ 'active': isMenuOpen }">
+      <button class="close-menu" @click="closeMenu" aria-label="Закрыть меню">
+        <span></span>
+        <span></span>
+      </button>
       <nav class="mobile-nav">
         <ul class="mobile-nav-list">
           <li class="mobile-nav-item">
@@ -262,10 +266,11 @@ onUnmounted(() => {
 .burger-menu {
   display: none;
   background: none;
-  border: none;
+  border: 1px solid #fff;
+  border-radius: 4px;
   cursor: pointer;
   padding: 0;
-  width: 30px;
+  width: 40px;
   height: 20px;
   position: relative;
   z-index: 2;
@@ -273,54 +278,62 @@ onUnmounted(() => {
 
 .burger-menu span {
   display: block;
-  width: 100%;
-  height: 2px;
+  width: 20px;
+  height: 1px;
   background: #fff;
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   transition: all 0.3s ease;
 }
 
 .burger-menu span:nth-child(1) {
-  top: 0;
+  top: 6px;
 }
 
 .burger-menu span:nth-child(2) {
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
 }
 
 .burger-menu span:nth-child(3) {
-  bottom: 0;
+  bottom: 6px;
 }
 
-.header--dark .burger-menu span {
-  background: #000;
+.close-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
 }
 
-.burger-menu.active span:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
+.close-menu span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transition: all 0.3s ease;
 }
 
-.burger-menu.active span:nth-child(2) {
-  opacity: 0;
+.close-menu span:first-child {
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.burger-menu.active span:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
+.close-menu span:last-child {
+  transform: translate(-50%, -50%) rotate(-45deg);
 }
 
 .mobile-menu {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 100%;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 1;
-  transition: right 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: none;
 }
 
 .mobile-menu.active {
@@ -351,13 +364,160 @@ onUnmounted(() => {
   color: #23A3FF;
 }
 
-@media (max-width: 749px) {
-  .nav {
-    display: none;
+@media (max-width: 768px) {
+  .header-content {
+    justify-content: center;
+    position: relative;
   }
-
+  .logo {
+  display: none;
+}
   .burger-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    cursor: pointer;
+  }
+  .burger-menu span {
     display: block;
+    width: 32px;
+    height: 2px;
+    margin: 2px 0;
+    background: white;
+    border-radius: 3px;
+    transition: 0.3s;
+  }
+  .logo {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-image {
+    height: 48px;
+    width: auto;
+  }
+  .nav {
+    display: none !important;
+  }
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    right: -100vw;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 1000;
+    transition: right 0.3s ease;
+  }
+  .mobile-menu.active {
+    right: 0;
+  }
+  .mobile-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+  }
+  .mobile-nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s ease;
+  }
+  .mobile-nav-link:hover {
+    color: #23A3FF;
+  }
+  .mobile-dropdown-list {
+    list-style: none;
+    margin: 8px 0 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .mobile-dropdown-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    padding-left: 16px;
+    transition: color 0.3s ease;
+  }
+  .mobile-dropdown-link:hover {
+    color: #23A3FF;
+  }
+}
+
+@media (max-width: 375px) {
+  .header {
+    padding: 10px 0;
+  }
+  .header-content {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+  .logo {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    width: 120px;
+  }
+  .logo-image {
+    height: 32px;
+    width: auto;
+  }
+  .burger-menu {
+    width: 40px;
+    height: 40px;
+    margin-left: 0;
+  }
+  .burger-menu span {
+    width: 24px;
+    height: 2px;
+    margin: 3px 0;
+  }
+  .close-menu {
+    width: 40px;
+    height: 40px;
+    top: 10px;
+    right: 10px;
+  }
+  .close-menu span {
+    width: 28px;
+    height: 2px;
+  }
+  .mobile-menu {
+    padding-top: 40px;
+  }
+  .mobile-nav-list {
+    gap: 20px;
+  }
+  .mobile-nav-link {
+    font-size: 18px;
   }
 }
 

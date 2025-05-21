@@ -64,7 +64,7 @@
 
 <style scoped>
 .pools-section {
-  padding: 100px 0;
+  
   margin: 0 auto;
 }
 
@@ -170,28 +170,38 @@
   .section-title {
     font-size: 36px;
   }
-
   .section-description {
     font-size: 15px;
   }
-
   .service-title {
     font-size: 24px;
   }
-
   .services-grid {
-    gap: 16px;
-  }
-
-  .grid-row {
+    display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 16px;
   }
-
+  .grid-row {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+  }
   .service-card,
   .service-card.large {
+    width: 748px;
+    min-width: 748px;
+    max-width: 748px;
+    height: 260px;
+    min-height: 260px;
+    max-height: 260px;
+    margin: 0 auto 16px auto;
+    display: block;
+  }
+  .service-image {
     width: 100%;
-    height: 280px;
+    height: 100%;
+    object-fit: cover;
   }
 }
 
@@ -276,38 +286,6 @@
   }
 }
 
-@media (max-width: 768px) {
-  .services-section {
-    padding: 60px 0;
-  }
-
-  .services-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .service-card {
-    height: 250px;
-  }
-
-  .service-content {
-    padding: 15px;
-  }
-
-  .service-title {
-    font-size: 20px;
-  }
-
-  .service-description {
-    font-size: 12px;
-  }
-
-  .service-button {
-    padding: 8px 16px;
-    font-size: 12px;
-  }
-}
-
 @media (max-width: 480px) {
   .services-section {
     padding: 40px 0;
@@ -336,6 +314,60 @@
 
   .service-description {
     font-size: 11px;
+  }
+}
+
+@media (max-width: 375px) {
+  .pools-section {
+    padding: 24px 0;
+  }
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .section-description {
+    font-size: 13px;
+    margin-bottom: 18px;
+    padding: 0 8px;
+  }
+  .services-grid {
+    gap: 8px;
+    margin-bottom: 18px;
+    align-items: center;
+  }
+  .grid-row {
+    gap: 8px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .service-card,
+  .service-card.large {
+    width: 355px !important;
+    min-width: 355px !important;
+    max-width: 355px !important;
+    height: 155px !important;
+    min-height: 155px !important;
+    max-height: 155px !important;
+    margin: 0 auto 8px auto;
+    display: block;
+  }
+  .service-overlay {
+    padding: 10px;
+  }
+  .service-title {
+    font-size: 15px;
+  }
+  .cta-button {
+    margin-top: 10px;
+  }
+  .button-primary {
+    font-size: 15px;
+    padding: 10px 0;
+    width: 180px;
+    border-radius: 100px;
+  }
+  br {
+    display: none;
   }
 }
 </style> 

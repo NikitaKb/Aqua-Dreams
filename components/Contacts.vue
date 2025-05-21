@@ -321,6 +321,10 @@ const handleSubmit = () => {
 }
 
 @media (max-width: 768px) {
+  .contacts {
+    display: none;
+  }
+
   .contacts-title {
     font-size: 42px;
   }

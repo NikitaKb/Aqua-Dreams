@@ -213,7 +213,7 @@ onMounted(() => {
     font-size: 35px;
     margin-bottom: 20px;
     font-weight: 500;
-    margin-right: 220px;
+    
   }
   .stats-numbers {
     display: flex;
@@ -238,17 +238,29 @@ onMounted(() => {
 }
 
 @media (max-width: 768px) {
-  .stats-numbers {
+  .content-wrapper {
+    display: flex;
     flex-direction: column;
-    gap: 30px;
+    align-items: center;
+    justify-content: center;
   }
-
+  .stats-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 110px;
+  }
   .stat-item {
     width: 100%;
   }
 
   .stat-description {
     max-width: none;
+  }
+
+  .stats-images {
+    display: none;
   }
 }
 
@@ -287,6 +299,73 @@ onMounted(() => {
   .wave-decoration {
     height: 40px;
     object-fit: cover;
+  }
+}
+
+@media (max-width: 375px) {
+  .about-stats {
+    padding: 0 0 16px 0;
+  }
+  .container {
+    padding: 0 4px;
+  }
+  .content-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .stats-block {
+    padding-top: 0;
+    margin-bottom: 0;
+    align-items: center;
+    justify-content: center;
+  }
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .stats-numbers {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+  }
+  .stat-item {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .stat-value {
+    font-size: 22px;
+    color: #23A3FF;
+    font-weight: 500;
+    margin-bottom: 2px;
+    border-bottom: 2px solid #23A3FF;
+    display: inline-block;
+    padding-bottom: 2px;
+  }
+  .stat-description {
+    font-size: 13px;
+    color: #222;
+    margin-bottom: 0;
+    margin-top: 2px;
+  }
+  .separator {
+    display: none;
+  }
+  .wave-decoration {
+    position: static;
+    width: 100vw;
+    min-width: 100vw;
+    max-width: 100vw;
+    height: 38px;
+    object-fit: cover;
+    margin-top: 18px;
+    margin-bottom: 0;
+    left: 0;
+    display: none;
   }
 }
 </style> 
