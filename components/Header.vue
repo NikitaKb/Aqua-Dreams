@@ -351,7 +351,7 @@ onUnmounted(() => {
   color: #23A3FF;
 }
 
-@media (max-width: 749px) {
+@media (max-width: 768px) {
   .nav {
     display: none;
   }
