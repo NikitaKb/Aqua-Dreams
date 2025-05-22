@@ -12,7 +12,7 @@ import Header from '~/components/Header.vue'; // Import the Header component
     <ExperienceBlock />
     <Company />
     <Certificates />
-    <Portfolio />
+    <OurProjects />
     <Contacts />
   </main>
 

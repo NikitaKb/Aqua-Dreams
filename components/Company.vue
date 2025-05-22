@@ -44,5 +44,42 @@
     max-width: 160px;
     object-fit: contain;
   }
+  
+  @media (max-width: 900px) {
+    .partners-title {
+      font-size: 28px;
+    }
+    .partners-logos {
+      gap: 20px;
+    }
+    .partners-logos img {
+      max-width: 100px;
+      max-height: 40px;
+    }
+  }
+  @media (max-width: 480px) {
+    .partners-container {
+      padding: 20px 4px;
+    }
+    .partners-title {
+      font-size: 18px;
+    }
+    .partners-logos {
+      gap: 10px;
+    }
+    .partners-logos img {
+      max-width: 70px;
+      max-height: 30px;
+    }
+  }
+  @media (max-width: 375px) {
+    .partners-title {
+      font-size: 14px;
+    }
+    .partners-logos img {
+      max-width: 50px;
+      max-height: 20px;
+    }
+  }
   </style>
   

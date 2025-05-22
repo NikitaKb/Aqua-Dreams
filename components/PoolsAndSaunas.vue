@@ -40,14 +40,14 @@
 
       <div class="grid-row">
         <!-- Химия -->
-        <nuxt-link to="/catalog" class="service-card large">
+        <nuxt-link to="/products" class="service-card large">
           <img src="/images/chemistry.png" alt="Химия" class="service-image" />
           <div class="service-overlay">
             <h3 class="service-title">Химия</h3>
           </div>
         </nuxt-link>
         <!-- Оборудование -->
-        <nuxt-link to="/catalog" class="service-card">
+        <nuxt-link to="/products" class="service-card">
           <img src="/images/equipment.png" alt="Оборудование" class="service-image" />
           <div class="service-overlay">
             <h3 class="service-title">Оборудование</h3>
@@ -255,6 +255,8 @@
   .pools-section {
     padding-left: 32px;
     padding-right: 32px;
+    width: 960px;
+    margin: 0 auto;
   }
   .services-grid {
     display: flex;

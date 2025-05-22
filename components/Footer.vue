@@ -47,7 +47,7 @@
       </div>
       
       <div class="footer-bottom">
-        <p class="copyright">DIRECTED BY ALEXANDR BOCHKOV & NIKITA ROMENSKIY</p>
+        
       </div>
     </div>
   </footer>

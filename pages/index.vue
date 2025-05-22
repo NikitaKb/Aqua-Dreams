@@ -14,7 +14,7 @@
         <AboutUsStats />
         <OurProjects />
         <Contacts />
-   <Catalog />
+ 
         
       </main>
     </div>

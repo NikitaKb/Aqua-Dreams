@@ -80,4 +80,40 @@
   font-weight: 600;
   pointer-events: none;
 }
+
+@media (max-width: 900px) {
+  .portfolio-section {
+    padding: 24px 4px;
+    margin-top: 40px;
+  }
+  .portfolio-title {
+    font-size: 22px;
+  }
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .overlay {
+    font-size: 18px;
+  }
+}
+@media (max-width: 480px) {
+  .portfolio-section {
+    padding: 12px 2px;
+  }
+  .portfolio-title {
+    font-size: 16px;
+  }
+  .overlay {
+    font-size: 13px;
+  }
+}
+@media (max-width: 375px) {
+  .portfolio-title {
+    font-size: 12px;
+  }
+  .overlay {
+    font-size: 10px;
+  }
+}
 </style>

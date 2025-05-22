@@ -146,5 +146,77 @@
   .btn:hover {
     background-color: #e6f4ff;
   }
+  
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column;
+      gap: 24px;
+      padding: 0;
+    }
+    .left {
+      text-align: center;
+    }
+    .number-25 {
+      font-size: 180px;
+    }
+    .right {
+      width: 100%;
+      justify-content: center;
+    }
+    .content-wrapper {
+      align-items: center;
+      transform: none;
+      padding: 0 8px;
+    }
+    .heading {
+      font-size: 28px;
+      text-align: center;
+    }
+    .stats {
+      
+      gap: 16px;
+      align-items: center;
+    }
+    .note {
+      text-align: center;
+    }
+    .buttons {
+      justify-content: center;
+    }
+  }
+  @media (max-width: 480px) {
+    .experience {
+      padding: 24px 4px;
+    }
+    .number-25 {
+      font-size: 90px;
+    }
+    .heading {
+      font-size: 18px;
+    }
+    .big-number {
+      font-size: 22px;
+    }
+    .text {
+      font-size: 13px;
+    }
+  }
+  @media (max-width: 375px) {
+    .experience {
+      padding: 12px 2px;
+    }
+    .number-25 {
+      font-size: 60px;
+    }
+    .heading {
+      font-size: 14px;
+    }
+    .big-number {
+      font-size: 16px;
+    }
+    .text {
+      font-size: 11px;
+    }
+  }
   </style>
   

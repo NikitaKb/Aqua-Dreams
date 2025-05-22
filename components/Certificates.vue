@@ -32,6 +32,38 @@
   
     height: auto;
   }
+  @media (max-width: 900px) {
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 30px;
+    }
+    .certificates {
+      gap: 16px;
+    }
+    .certificates img {
+      max-width: 120px;
+    }
+  }
+  @media (max-width: 480px) {
+    .certificates-section {
+      margin-top: 40px;
+    }
+    .section-title {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+    .certificates img {
+      max-width: 80px;
+    }
+  }
+  @media (max-width: 375px) {
+    .section-title {
+      font-size: 12px;
+    }
+    .certificates img {
+      max-width: 50px;
+    }
+  }
   </style>
   
    
