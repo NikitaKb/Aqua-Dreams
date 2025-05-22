@@ -8,6 +8,26 @@
         @click="selectCategory(cat.slug)"
       >{{ cat.name }}</span>
     </div>
+    <div class="filters-container">
+      <div class="search-container">
+        <input 
+          type="text" 
+          v-model="searchQuery" 
+          @input="handleSearch"
+          placeholder="Поиск по названию..."
+          class="search-input"
+        />
+      </div>
+      <div class="sort-container">
+        <select v-model="sortOrder" @change="handleSort" class="sort-select">
+          <option value="">Сортировка</option>
+          <option value="popularity_desc">По популярности (убыв.)</option>
+          <option value="popularity_asc">По популярности (возр.)</option>
+          <option value="name_asc">По алфавиту (А-Я)</option>
+          <option value="name_desc">По алфавиту (Я-А)</option>
+        </select>
+      </div>
+    </div>
     <div class="catalog-grid">
       <div v-for="item in items" :key="item.id" class="catalog-card">
         <div class="catalog-card-img-wrap">
@@ -43,6 +63,9 @@ export default {
       loading: true,
       error: null,
       sliderIndexes: {},
+      searchQuery: '',
+      searchTimeout: null,
+      sortOrder: ''
     };
   },
   mounted() {
@@ -81,7 +104,36 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/catalog/${this.categoryName}/`);
+        let url = `http://127.0.0.1:8000/api/catalog/${this.categoryName}/`;
+        const params = new URLSearchParams();
+
+        if (this.searchQuery) {
+          params.append('search', this.searchQuery);
+        }
+
+        if (this.sortOrder) {
+          switch (this.sortOrder) {
+            case 'popularity_desc':
+              params.append('ordering', '-popularity');
+              break;
+            case 'popularity_asc':
+              params.append('ordering', 'popularity');
+              break;
+            case 'name_desc':
+              params.append('ordering', '-name');
+              break;
+            case 'name_asc':
+              params.append('ordering', 'name');
+              break;
+          }
+        }
+
+        const queryString = params.toString();
+        if (queryString) {
+          url += `?${queryString}`;
+        }
+
+        const res = await fetch(url);
         if (!res.ok) throw new Error('Ошибка загрузки категории');
         const data = await res.json();
         this.items = data.products;
@@ -91,8 +143,22 @@ export default {
         this.loading = false;
       }
     },
+    handleSearch() {
+      // Добавляем задержку для предотвращения частых запросов
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+      this.searchTimeout = setTimeout(() => {
+        this.fetchCategory();
+      }, 300);
+    },
+    handleSort() {
+      this.fetchCategory();
+    },
     selectCategory(slug) {
       this.categoryName = slug;
+      this.searchQuery = '';
+      this.sortOrder = ''; // Сбрасываем сортировку при смене категории
       this.fetchCategory();
     },
     getImages(item) {
@@ -284,6 +350,114 @@ export default {
     width: 100%;
     font-size: 14px;
     padding: 8px 0;
+  }
+}
+.filters-container {
+  display: flex;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto 40px;
+  padding: 0 20px;
+  align-items: center;
+}
+
+.search-container {
+  flex: 1;
+  margin: 0;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 24px;
+  padding-left: 70px;
+  font-size: 16px;
+  border: 1px solid #23A3FF;
+  border-radius: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.search-input:focus {
+  box-shadow: 0 4px 15px rgba(35, 163, 255, 0.1);
+}
+
+.search-input::placeholder {
+  color: #23A3FF;
+  font-size: 15px;
+}
+
+.search-container::before {
+  content: '';
+  position: absolute;
+  left: 35px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2323A3FF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.search-input:focus + .search-container::before {
+  opacity: 1;
+}
+
+.sort-container {
+  min-width: 200px;
+}
+
+.sort-select {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+  border: 1px solid #23A3FF;
+  border-radius: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #fff;
+  color: #23A3FF;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2323A3FF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 16px;
+}
+
+.sort-select:focus {
+  box-shadow: 0 4px 15px rgba(35, 163, 255, 0.1);
+}
+
+.sort-select option {
+  color: #333;
+  background: #fff;
+}
+
+@media (max-width: 768px) {
+  .filters-container {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sort-container {
+    width: 100%;
+  }
+
+  .search-input {
+    padding: 12px 20px;
+    padding-left: 50px;
+    font-size: 14px;
+  }
+
+  .search-container::before {
+    left: 25px;
+    width: 16px;
+    height: 16px;
   }
 }
 </style> 

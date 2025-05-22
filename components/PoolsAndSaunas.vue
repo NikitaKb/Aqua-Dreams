@@ -153,7 +153,7 @@
 /* Desktop (1440px) */
 @media (max-width: 1440px) {
   .pools-section {
-    width: 1160px;
+    
     margin: 0 auto;
   }
   .section-title {
@@ -169,6 +169,7 @@
 
 /* Tablet (768px) */
 @media (max-width: 768px) {
+  
   .section-title {
     font-size: 36px;
   }
@@ -255,7 +256,7 @@
   .pools-section {
     padding-left: 32px;
     padding-right: 32px;
-    width: 960px;
+   
     margin: 0 auto;
   }
   .services-grid {
