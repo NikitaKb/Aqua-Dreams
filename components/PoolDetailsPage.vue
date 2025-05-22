@@ -12,7 +12,7 @@
         <div class="pool-info-block">
           <h1 class="pool-title">{{ poolData.name }}</h1>
           <p class="pool-description">{{ poolData.description_short }}</p>
-          <button class="pool-consult-btn" @click="showModal = true">Бесплатная консультация</button>
+          <button class="pool-consult-btn" @click="showConsultModal = true">Бесплатная консультация</button>
         </div>
       </div>
       <div class="pool-advantages-block" v-if="poolData.advantages && poolData.advantages.length > 0">
@@ -39,20 +39,12 @@
         </div>
       </div>
     </div>
-
-    <!-- Модальное окно консультации -->
-    <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
-      <div class="modal-content">
-        <button class="modal-close" @click="showModal = false">&times;</button>
-        <h2 class="modal-title">Получить бесплатную консультацию</h2>
-        <form class="modal-form" @submit.prevent="submitConsultation">
-          <input v-model="form.firstName" type="text" placeholder="Имя" required class="modal-input" />
-          <input v-model="form.lastName" type="text" placeholder="Фамилия" required class="modal-input" />
-          <input v-model="form.phone" type="tel" placeholder="Телефон" required class="modal-input" />
-          <button type="submit" class="modal-submit">Получить консультацию</button>
-        </form>
-      </div>
-    </div>
+    <ConsultationModal
+      :show="showConsultModal"
+      :onClose="() => showConsultModal = false"
+      :slug="poolData.slug"
+      :name="poolData.name"
+    />
   </section>
 </template>
 
@@ -60,6 +52,7 @@
 import { computed, ref, reactive, onMounted, watch } from 'vue';
 import { defineProps } from 'vue';
 import { useRoute } from 'vue-router';
+import ConsultationModal from './ConsultationModal.vue';
 
 interface Advantage {
   title: string;
@@ -123,12 +116,7 @@ function nextImage() {
   currentIndex.value = (currentIndex.value + 1) % images.length;
 }
 
-const showModal = ref(false);
-const form = reactive({
-  firstName: '',
-  lastName: '',
-  phone: '',
-});
+const showConsultModal = ref(false);
 
 const route = useRoute();
 
@@ -172,18 +160,8 @@ async function fetchPoolData(type: string) {
   }
 }
 
-function submitConsultation() {
-  console.log('Была нажата кнопка: Бесплатная консультация');
-  console.log('Данные пользователя:', {
-    firstName: form.firstName,
-    lastName: form.lastName,
-    phone: form.phone,
-  });
-  showModal.value = false;
-  form.firstName = '';
-  form.lastName = '';
-  form.phone = '';
-}
+
+
 </script>
 
 <style scoped>
@@ -400,81 +378,5 @@ function submitConsultation() {
     max-width: 100%;
     aspect-ratio: 760 / 490;
   }
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-content {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  padding: 40px 32px 32px 32px;
-  min-width: 320px;
-  max-width: 95vw;
-  width: 400px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.modal-close {
-  position: absolute;
-  top: 18px;
-  right: 22px;
-  background: none;
-  border: none;
-  font-size: 32px;
-  color: #23A3FF;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-.modal-close:hover {
-  color: #1e8edf;
-}
-.modal-title {
-  color: #23A3FF;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 28px;
-  text-align: center;
-}
-.modal-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.modal-input {
-  padding: 14px 18px;
-  border-radius: 10px;
-  border: 1.5px solid #23A3FF;
-  font-size: 16px;
-  outline: none;
-  transition: border 0.2s;
-}
-.modal-input:focus {
-  border-color: #1e8edf;
-}
-.modal-submit {
-  background: #23A3FF;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 18px 0;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background 0.2s;
-}
-.modal-submit:hover {
-  background: #1e8edf;
 }
 </style> 

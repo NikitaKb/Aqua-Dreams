@@ -1,61 +1,16 @@
 <template>
-  <section class="termo-types">
+  <section class="pool-types">
     <div class="container">
-      <h2 class="section-title">Терма-зоны</h2>
+      <h2 class="section-title">Виды бассейнов</h2>
       <p class="section-subtitle">Ваш уголок отдыха и гармонии прямо у дома.</p>
-      <div class="termo-cards">
-        <div class="termo-card">
-          <img src="/images/sauna_bl.png" alt="Сауны" class="termo-image">
-          <div class="termo-content">
-            <h3 class="termo-title">Сауны</h3>
-            <p class="termo-description">
-              Сауна – это идеальное место для отдыха с максимальной пользой для здоровья. Сухой пар, температура до 100 градусов. Для любителей классического парения. Финские сауны отличаются особой атмосферой и качеством используемых материалов.
-            </p>
-            <NuxtLink to="/termo/saunas" class="termo-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="termo-card">
-          <img src="/images/hammam_bl.png" alt="Хаммамы" class="termo-image">
-          <div class="termo-content">
-            <h3 class="termo-title">Хаммамы</h3>
-            <p class="termo-description">
-              Хаммам, или турецкая баня – древняя традиция оздоровления. При идеальной влажности воздуха и температуре до 50 градусов, организм мягко прогревается. Это отличный способ для релаксации, а также ухода за кожей.
-            </p>
-            <NuxtLink to="/termo/hammams" class="termo-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="termo-card">
-          <img src="/images/kupel_bl.png" alt="Купели" class="termo-image">
-          <div class="termo-content">
-            <h3 class="termo-title">Купели</h3>
-            <p class="termo-description">
-              Купель – это особый вид бассейна для охлаждения после бани или сауны. Традиционно изготавливается из натурального дерева. Идеальное дополнение к любой бане для контрастных процедур.
-            </p>
-            <NuxtLink to="/termo/kupel" class="termo-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="termo-card">
-          <img src="/images/bany_bl.png" alt="Бани" class="termo-image">
-          <div class="termo-content">
-            <h3 class="termo-title">Бани</h3>
-            <p class="termo-description">
-              Русская баня из натурального бревна или бруса – это традиционная и классическая парная. Это совершенство в простоте, где каждая деталь продумана для создания правильного микроклимата и получения максимума пользы.
-            </p>
-            <NuxtLink to="/termo/bany" class="termo-button">Подробнее</NuxtLink>
-          </div>
-        </div>
-
-        <div class="termo-card">
-          <img src="/images/dush_bl.png" alt="Душ впечатлений Granda" class="termo-image">
-          <div class="termo-content">
-            <h3 class="termo-title">Душ впечатлений Granda</h3>
-            <p class="termo-description">
-              Уникальная spa-процедура, которая сочетает в себе воздействие воды разной температуры и напора, хромотерапию, ароматерапию. Позволяет восстановить силы после тренировок, снять стресс и получить заряд бодрости.
-            </p>
-            <NuxtLink to="/termo/dush" class="termo-button">Подробнее</NuxtLink>
+      
+      <div class="pool-cards">
+        <div class="pool-card" v-for="pool in pools" :key="pool.id">
+          <img :src="`http://127.0.0.1:8000${pool.main_image_url}`" :alt="pool.name" class="pool-image">
+          <div class="pool-content">
+            <h3 class="pool-title">{{ pool.name }}</h3>
+            <p class="pool-description">{{ pool.description_short }}</p>
+            <NuxtLink :to="`/termo/${pool.slug}`" class="pool-button">Подробнее</NuxtLink>
           </div>
         </div>
       </div>
@@ -64,18 +19,28 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+
+const pools = ref([]);
+
+onMounted(async () => {
+  const res = await fetch('http://localhost:8000/api/terms/');
+  pools.value = await res.json();
+});
 </script>
 
 <style scoped>
-.termo-types {
+.pool-types {
   background: #fff;
-
   padding-top: 86px;
+  
+  
+margin-top: 100px;
 }
 
 .container {
   max-width: 1360px;
-  margin:  86px auto;
+  margin: 0 auto;
   padding: 0 20px;
 }
 
@@ -93,13 +58,14 @@
   margin-bottom: 60px;
 }
 
-.termo-cards {
+.pool-cards {
   display: flex;
   flex-direction: column;
   gap: 86px;
+
 }
 
-.termo-card {
+.pool-card {
   position: relative;
   border-radius: 20px;
   overflow: hidden;
@@ -108,7 +74,7 @@
   width: 100%;
 }
 
-.termo-image {
+.pool-image {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -116,7 +82,7 @@
   opacity: 0.7;
 }
 
-.termo-content {
+.pool-content {
   position: relative;
   z-index: 1;
   padding: 40px;
@@ -127,21 +93,21 @@
   justify-content: center;
 }
 
-.termo-title {
+.pool-title {
   font-size: 32px;
   font-weight: 500;
   margin-bottom: 20px;
   color: #C4944C;
 }
 
-.termo-description {
+.pool-description {
   font-size: 16px;
   line-height: 1.6;
   margin-bottom: 30px;
   max-width: 600px;
 }
 
-.termo-button {
+.pool-button {
   display: inline-block;
   background: #C4944C;
   color: #fff;
@@ -155,26 +121,107 @@
   border: none;
 }
 
-.termo-button:hover {
-  background: #b38544;
+.pool-button:hover {
+  background: #C4944C;
   transform: scale(1.05);
 }
 
-@media (max-width: 768px) {
-  .termo-card {
-    height: 350px;
+@media (max-width: 1024px) {
+  .pool-types {
+    padding: 80px 0;
   }
 
-  .termo-content {
-    padding: 30px;
+  .section-title {
+    font-size: 32px;
+    margin-bottom: 10px;
   }
 
-  .termo-title {
-    font-size: 28px;
+  .section-subtitle {
+    font-size: 16px;
+    margin-bottom: 40px;
   }
 
-  .termo-description {
-    font-size: 14px;
+  .pool-cards {
+    gap: 16px;
+  }
+
+  .pool-card {
+    height: 260px;
+  }
+
+  .pool-content {
+    padding: 20px;
+  }
+
+  .pool-title {
+    font-size: 24px;
+  }
+
+  .pool-description {
+    font-size: 13px;
+  }
+
+  .pool-button {
+    font-size: 12px;
+    padding: 8px 16px;
   }
 }
-</style>
+
+@media (max-width: 768px) {
+  .pool-types {
+    padding: 60px 0;
+  }
+
+  .pool-card {
+    height: 300px;
+  }
+
+  .pool-content {
+    padding: 20px;
+  }
+
+  .pool-title {
+    font-size: 24px;
+  }
+
+  .pool-description {
+    font-size: 12px;
+  }
+
+  .pool-button {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pool-types {
+    padding: 40px 0;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .section-subtitle {
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  .pool-card {
+    height: 250px;
+  }
+
+  .pool-content {
+    padding: 15px;
+  }
+
+  .pool-title {
+    font-size: 20px;
+  }
+
+  .pool-description {
+    font-size: 11px;
+  }
+}
+</style> 

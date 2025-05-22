@@ -1,19 +1,21 @@
 <template>
-  <section class="termo-details-page">
+  <section class="pool-details-page">
     <div class="container">
-      <div class="termo-main-block">
-        <div class="termo-image-block">
-          <div class="termo-slider">
-            <img :src="imageSrc" :alt="termoTitle" class="termo-main-image" />
+      <div class="pool-main-block">
+        <div class="pool-image-block">
+          <div class="pool-slider">
+            <img :src="currentImage" :alt="termoData.name" class="pool-main-image" />
+            <button v-if="termoData.images && termoData.images.length > 1" class="slider-arrow left" @click="prevImage">&#60;</button>
+            <button v-if="termoData.images && termoData.images.length > 1" class="slider-arrow right" @click="nextImage">&#62;</button>
           </div>
         </div>
-        <div class="termo-info-block">
-          <h1 class="termo-title">{{ termoTitle }}</h1>
-          <p class="termo-description">{{ termoDescription }}</p>
-          <button class="termo-consult-btn" @click="showModal = true">Бесплатная консультация</button>
+        <div class="pool-info-block">
+          <h1 class="pool-title">{{ termoData.name }}</h1>
+          <p class="pool-description">{{ termoData.description_short }}</p>
+          <button class="pool-consult-btn" @click="showConsultModal = true">Бесплатная консультация</button>
         </div>
       </div>
-      <div class="termo-advantages-block container">
+      <div class="pool-advantages-block" v-if="termoData.advantages && termoData.advantages.length > 0">
         <h2 class="advantages-title">Преимущества</h2>
         <div class="advantages-columns">
           <div class="advantages-col">
@@ -37,121 +39,132 @@
         </div>
       </div>
     </div>
-
-    <!-- Модальное окно консультации -->
-    <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
-      <div class="modal-content">
-        <button class="modal-close" @click="showModal = false">&times;</button>
-        <h2 class="modal-title">Получить бесплатную консультацию</h2>
-        <form class="modal-form" @submit.prevent="submitConsultation">
-          <input v-model="form.firstName" type="text" placeholder="Имя" required class="modal-input" />
-          <input v-model="form.lastName" type="text" placeholder="Фамилия" required class="modal-input" />
-          <input v-model="form.phone" type="tel" placeholder="Телефон" required class="modal-input" />
-          <button type="submit" class="modal-submit">Получить консультацию</button>
-        </form>
-      </div>
-    </div>
+    <ConsultationModal
+      :show="showConsultModal"
+      :onClose="() => showConsultModal = false"
+      :slug="termoData.slug"
+      :name="termoData.name"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue';
+import { computed, ref, reactive, onMounted, watch } from 'vue';
 import { defineProps } from 'vue';
+import { useRoute } from 'vue-router';
+import ConsultationModal from './ConsultationModal.vue';
+
+interface Advantage {
+  title: string;
+  text: string;
+}
+
+interface TermoImage {
+  image_url: string;
+}
+
+interface TermoData {
+  id: number;
+  name: string;
+  description_short: string;
+  description: string | null;
+  slug: string;
+  images: TermoImage[];
+  advantages?: Advantage[];
+}
 
 const props = defineProps<{ type: string }>();
 
-const termoTitles: Record<string, string> = {
-  saunas: 'Сауны',
-  hammams: 'Хаммамы',
-  kupel: 'Купели',
-  bany: 'Бани',
-  dush: 'Душ впечатлений Granda',
-};
-
-const termoDescriptions: Record<string, string> = {
-  saunas: 'Сауна — это идеальное место для отдыха с максимальной пользой для здоровья. Сухой пар, температура до 100 градусов. Для любителей классического парения. Финские сауны отличаются особой атмосферой и качеством используемых материалов.',
-  hammams: 'Хаммам, или турецкая баня — древняя традиция оздоровления. При идеальной влажности воздуха и температуре до 50 градусов, организм мягко прогревается. Это отличный способ для релаксации, а также ухода за кожей.',
-  kupel: 'Купель — это особый вид бассейна для охлаждения после бани или сауны. Традиционно изготавливается из натурального дерева. Идеальное дополнение к любой бане для контрастных процедур.',
-  bany: 'Русская баня из натурального бревна или бруса — это традиционная и классическая парная. Это совершенство в простоте, где каждая деталь продумана для создания правильного микроклимата и получения максимума пользы.',
-  dush: 'Душ впечатлений Granda — уникальная spa-процедура, которая сочетает в себе воздействие воды разной температуры и напора, хромотерапию, ароматерапию. Позволяет восстановить силы после тренировок, снять стресс и получить заряд бодрости.',
-};
-
-const termoImages: Record<string, string> = {
-  saunas: '/images/sauna_bl.png',
-  hammams: '/images/hammam_bl.png',
-  kupel: '/images/kupel_bl.png',
-  bany: '/images/bany_bl.png',
-  dush: '/images/dush_bl.png',
-};
-
-const termoAdvantages: Record<string, {title: string, text: string}[]> = {
-  saunas: [
-    { title: 'Оздоровительный эффект', text: 'Сауна способствует укреплению иммунитета, улучшает кровообращение и общее самочувствие.' },
-    { title: 'Индивидуальный дизайн', text: 'Возможность выбора отделки, размеров и планировки под ваш вкус.' },
-    { title: 'Долговечность', text: 'Использование качественных материалов обеспечивает долгий срок службы.' },
-    { title: 'Простота эксплуатации', text: 'Современные системы управления делают использование сауны максимально удобным.' },
-  ],
-  hammams: [
-    { title: 'Мягкий климат', text: 'Низкая температура и высокая влажность подходят даже для людей с чувствительной кожей.' },
-    { title: 'Расслабление и уход за кожей', text: 'Пар и процедуры в хаммаме способствуют глубокому очищению и увлажнению кожи.' },
-    { title: 'Эстетика и атмосфера', text: 'Восточный стиль и мозаика создают особую атмосферу релакса.' },
-    { title: 'Универсальность', text: 'Хаммам можно оборудовать в частном доме, квартире или spa-комплексе.' },
-  ],
-  kupel: [
-    { title: 'Контрастные процедуры', text: 'Купель идеально подходит для охлаждения после парной, усиливая оздоровительный эффект.' },
-    { title: 'Экологичность', text: 'Изготавливается из натурального дерева или современных материалов.' },
-    { title: 'Компактность', text: 'Не занимает много места, легко вписывается в любой интерьер.' },
-    { title: 'Простота ухода', text: 'Современные купели просты в обслуживании и долговечны.' },
-  ],
-  bany: [
-    { title: 'Традиции и здоровье', text: 'Русская баня — это не только отдых, но и профилактика многих заболеваний.' },
-    { title: 'Натуральные материалы', text: 'Использование дерева создает особый микроклимат и аромат.' },
-    { title: 'Гибкость планировки', text: 'Можно реализовать любые пожелания по размерам и внутреннему устройству.' },
-    { title: 'Долговечность', text: 'Качественная баня служит десятилетиями.' },
-  ],
-  dush: [
-    { title: 'Многофункциональность', text: 'Сочетает в себе различные режимы подачи воды, световые и ароматические эффекты.' },
-    { title: 'Релаксация и восстановление', text: 'Идеально подходит для снятия стресса и восстановления после физических нагрузок.' },
-    { title: 'Современные технологии', text: 'Инновационные системы управления и безопасности.' },
-    { title: 'Индивидуальный подход', text: 'Возможность настройки под личные предпочтения.' },
-  ],
-};
-
-const termoTitle = computed(() => termoTitles[props.type] || props.type);
-const termoDescription = computed(() => termoDescriptions[props.type] || '');
-const imageSrc = computed(() => termoImages[props.type] || '/images/sauna_bl.png');
-const advantages = computed(() => termoAdvantages[props.type] || termoAdvantages['saunas']);
-
-const leftAdvantages = computed(() => [advantages.value[0], advantages.value[2]]);
-const rightAdvantages = computed(() => [advantages.value[1], advantages.value[3]]);
-
-const showModal = ref(false);
-const form = reactive({
-  firstName: '',
-  lastName: '',
-  phone: '',
+const termoData = ref<TermoData>({
+  id: 0,
+  name: '',
+  description_short: '',
+  description: '',
+  slug: '',
+  images: [{ image_url: '/images/termo-b.png' }],
+  advantages: []
 });
 
-function submitConsultation() {
-  // Логируем данные и инфо о кнопке
-  console.log('Была нажата кнопка: Бесплатная консультация');
-  console.log('Данные пользователя:', {
-    firstName: form.firstName,
-    lastName: form.lastName,
-    phone: form.phone,
-  });
-  showModal.value = false;
-  // Очищаем форму (по желанию)
-  form.firstName = '';
-  form.lastName = '';
-  form.phone = '';
+const currentIndex = ref(0);
+const BASE_URL = 'http://localhost:8000';
+
+const currentImage = computed(() => {
+  const images = termoData.value.images || [];
+  if (images.length === 0) return '/images/termo-b.png';
+  const imgObj = images[currentIndex.value];
+  if (!imgObj || !imgObj.image_url) return '/images/termo-b.png';
+  return imgObj.image_url.startsWith('http') ? imgObj.image_url : BASE_URL + imgObj.image_url;
+});
+
+const leftAdvantages = computed(() => {
+  const advantages = termoData.value.advantages || [];
+  return [advantages[0], advantages[2]];
+});
+
+const rightAdvantages = computed(() => {
+  const advantages = termoData.value.advantages || [];
+  return [advantages[1], advantages[3]];
+});
+
+function prevImage() {
+  const images = termoData.value.images || ['/images/termo-b.png'];
+  currentIndex.value = (currentIndex.value - 1 + images.length) % images.length;
+}
+
+function nextImage() {
+  const images = termoData.value.images || ['/images/termo-b.png'];
+  currentIndex.value = (currentIndex.value + 1) % images.length;
+}
+
+const showConsultModal = ref(false);
+
+const route = useRoute();
+
+const getType = (t: string | string[]) => Array.isArray(t) ? t[0] : t;
+
+onMounted(() => {
+  fetchTermoData(getType(route.params.type));
+});
+watch(() => route.params.type, (newType) => {
+  fetchTermoData(getType(newType));
+});
+
+async function fetchTermoData(type: string) {
+  try {
+    console.log('Fetching termo data for type:', type);
+    const response = await fetch(`http://localhost:8000/api/terms/${type}/`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch termo data: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log('Received data from API:', data);
+    
+    termoData.value = {
+      ...data,
+      images: data.images || [{ image_url: '/images/termo-b.png' }],
+      advantages: data.advantages || []
+    };
+    console.log('Processed termo data:', termoData.value);
+  } catch (error) {
+    console.error('Error fetching termo data:', error);
+    // Fallback data in case of error
+    termoData.value = {
+      id: 0,
+      name: 'Термо',
+      description_short: 'Информация о термо временно недоступна',
+      description: null,
+      slug: type,
+      images: [{ image_url: '/images/termo-b.png' }],
+      advantages: []
+    };
+  }
 }
 </script>
 
 <style scoped>
-.termo-details-page {
+.pool-details-page {
   background: #fff;
-  min-height: 100vh;
+  
   padding: 40px 0 0 0;
 }
 
@@ -161,20 +174,20 @@ function submitConsultation() {
   padding: 0 20px;
 }
 
-.termo-main-block {
+.pool-main-block {
   display: flex;
   align-items: flex-start;
   gap: 60px;
 }
 
-.termo-image-block {
+.pool-image-block {
   flex: 1 1 60%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.termo-slider {
+.pool-slider {
   position: relative;
   width: 100%;
   max-width: 760px;
@@ -187,7 +200,7 @@ function submitConsultation() {
   justify-content: center;
 }
 
-.termo-main-image {
+.pool-main-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -195,7 +208,36 @@ function submitConsultation() {
   display: block;
 }
 
-.termo-info-block {
+.slider-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.8);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 28px;
+  color: #C4944C;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+}
+
+.slider-arrow.left {
+  left: 16px;
+}
+
+.slider-arrow.right {
+  right: 16px;
+}
+
+.slider-arrow:hover {
+  background: #C4944C;
+  color: #fff;
+}
+
+.pool-info-block {
   flex: 1 1 40%;
   display: flex;
   flex-direction: column;
@@ -203,37 +245,38 @@ function submitConsultation() {
   margin-top: 40px;
 }
 
-.termo-title {
+.pool-title {
   color: #C4944C;
-  font-size: 48px;
+  font-size: 38px;
   font-weight: 600;
   margin-bottom: 24px;
 }
 
-.termo-description {
+.pool-description {
   color: #222;
   font-size: 18px;
   margin-bottom: 32px;
   line-height: 1.5;
 }
 
-.termo-consult-btn {
+.pool-consult-btn {
   background: transparent;
   color: #C4944C;
-  border: 2px solid #C4944C;
-  border-radius: 16px;
+  border: 1.5px solid #C4944C;
+  border-radius: 12px;
   padding: 35px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }
-.termo-consult-btn:hover {
+
+.pool-consult-btn:hover {
   background: #C4944C;
   color: #fff;
 }
 
-.termo-advantages-block {
+.pool-advantages-block {
   margin: 60px 0 0 0;
 }
 
@@ -285,20 +328,20 @@ function submitConsultation() {
   line-height: 1.5;
 }
 @media (max-width: 1024px) {
-  .termo-main-block {
+  .pool-main-block {
     flex-direction: column;
     gap: 30px;
     align-items: center;
   }
-  .termo-info-block {
+  .pool-info-block {
     margin-top: 0;
     align-items: center;
   }
-  .termo-title {
-    font-size: 36px;
+  .pool-title {
+    font-size: 28px;
     text-align: center;
   }
-  .termo-description {
+  .pool-description {
     text-align: center;
   }
   .advantages-columns {
@@ -312,101 +355,25 @@ function submitConsultation() {
     font-size: 40px;
     min-width: 40px;
   }
-  .termo-slider {
+  .pool-slider {
     max-width: 100%;
     aspect-ratio: 760 / 490;
   }
 }
 @media (max-width: 600px) {
-  .termo-main-block {
+  .pool-main-block {
     padding: 0 10px;
   }
-  .termo-title {
-    font-size: 24px;
+  .pool-title {
+    font-size: 20px;
   }
   .advantage-number {
     font-size: 28px;
     min-width: 28px;
   }
-  .termo-slider {
+  .pool-slider {
     max-width: 100%;
     aspect-ratio: 760 / 490;
   }
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.modal-content {
-  background: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-  padding: 40px 32px 32px 32px;
-  min-width: 320px;
-  max-width: 95vw;
-  width: 400px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.modal-close {
-  position: absolute;
-  top: 18px;
-  right: 22px;
-  background: none;
-  border: none;
-  font-size: 32px;
-  color: #C4944C;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-.modal-close:hover {
-  color: #a97a2e;
-}
-.modal-title {
-  color: #C4944C;
-  font-size: 24px;
-  font-weight: 600;
-  margin-bottom: 28px;
-  text-align: center;
-}
-.modal-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-.modal-input {
-  padding: 14px 18px;
-  border-radius: 10px;
-  border: 1.5px solid #C4944C;
-  font-size: 16px;
-  outline: none;
-  transition: border 0.2s;
-}
-.modal-input:focus {
-  border-color: #a97a2e;
-}
-.modal-submit {
-  background: #C4944C;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 18px 0;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background 0.2s;
-}
-.modal-submit:hover {
-  background: #a97a2e;
 }
 </style> 

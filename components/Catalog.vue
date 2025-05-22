@@ -29,6 +29,12 @@
 <script>
 export default {
   name: 'Catalog',
+  props: {
+    categorySlug: {
+      type: String,
+      required: false
+    }
+  },
   data() {
     return {
       categories: [],
@@ -42,6 +48,17 @@ export default {
   mounted() {
     this.fetchCategories();
   },
+  watch: {
+    categorySlug: {
+      immediate: true,
+      handler(newSlug) {
+        if (newSlug) {
+          this.categoryName = newSlug;
+          this.fetchCategory();
+        }
+      }
+    }
+  },
   methods: {
     async fetchCategories() {
       this.loading = true;
@@ -50,7 +67,7 @@ export default {
         if (!res.ok) throw new Error('Ошибка загрузки категорий');
         const data = await res.json();
         this.categories = data;
-        if (data.length > 0) {
+        if (!this.categorySlug && data.length > 0) {
           this.categoryName = data[0].slug;
           await this.fetchCategory();
         }
@@ -79,12 +96,15 @@ export default {
       this.fetchCategory();
     },
     getImages(item) {
-      return [item.image, item.image_second].filter(Boolean);
+      const BASE_URL = 'http://localhost:8000';
+      return [item.image, item.image_second]
+        .filter(Boolean)
+        .map(img => img.startsWith('http') ? img : `${BASE_URL}${img}`);
     },
     getCurrentImage(item) {
       const images = this.getImages(item);
       const idx = this.sliderIndexes[item.id] || 0;
-      return images[idx] || images[0];
+      return images[idx] || images[0] || '';
     },
   },
 };
@@ -168,13 +188,17 @@ export default {
   border: 1px solid #23A3FF;
   background: #fff;
   color: #23A3FF;
-  border-radius: 100px;
+  border-radius: 15px;
   padding: 10px 0;
   width: 160px;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
   margin-top: 12px;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .catalog-card-btn:hover {
   background: #23A3FF;

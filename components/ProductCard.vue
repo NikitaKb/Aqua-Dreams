@@ -8,7 +8,7 @@
     <h1 class="product-title">{{ product.name }}</h1>
     <div class="product-main">
       <div class="product-slider">
-        <img :src="currentImage" alt="" class="product-main-img" />
+        <img v-if="currentImage" :src="currentImage" :alt="product.name" class="product-main-img" />
         <div v-if="images.length > 1" class="product-slider-controls">
           <button @click="prevImage">‹</button>
           <button @click="nextImage">›</button>
@@ -22,7 +22,7 @@
         <div v-for="spec in product.specifications" :key="spec.id" class="product-spec">
           <b>{{ spec.key }}</b>: {{ spec.value }}
         </div>
-        <button class="consult-btn">Бесплатная консультация</button>
+        <button class="consult-btn" @click="showConsultModal = true">Бесплатная консультация</button>
       </div>
     </div>
     <div class="product-block">
@@ -33,12 +33,21 @@
       <h2>Особые отметки</h2>
       <p>{{ product.special_notes }}</p>
     </div>
+    <ConsultationModal
+      :show="showConsultModal"
+      :onClose="() => showConsultModal = false"
+      :slug="product.slug"
+      :name="product.name"
+    />
+ 
   </section>
 </template>
 
 <script>
+import ConsultationModal from './ConsultationModal.vue';
 export default {
   name: 'ProductCard',
+  components: { ConsultationModal },
   data() {
     return {
       product: null,
@@ -46,14 +55,23 @@ export default {
       productSlug: this.$route.params.productSlug,
       currentImageIndex: 0,
       categoryName: '',
+      showConsultModal: false,
     };
   },
   computed: {
     images() {
       if (!this.product) return [];
-      return [
-        ...(this.product.images || []).map(img => img.image_url)
-      ].filter(Boolean);
+      const BASE_URL = 'http://localhost:8000';
+      const productImages = [];
+      
+      if (this.product.image) {
+        productImages.push(this.product.image.startsWith('http') ? this.product.image : `${BASE_URL}${this.product.image}`);
+      }
+      if (this.product.image_second) {
+        productImages.push(this.product.image_second.startsWith('http') ? this.product.image_second : `${BASE_URL}${this.product.image_second}`);
+      }
+      
+      return productImages;
     },
     currentImage() {
       return this.images[this.currentImageIndex] || this.images[0] || '';
@@ -111,13 +129,12 @@ export default {
 .product-main {
   display: flex;
   gap: 40px;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: 32px;
+  width: 100%;
 }
 .product-slider {
   flex: 1 1 60%;
-  max-width: 600px;
-  min-width: 320px;
   background: #fff;
   border: 1px solid #bbb;
   border-radius: 4px;
@@ -126,12 +143,12 @@ export default {
   flex-direction: column;
   align-items: center;
   position: relative;
+  width: 100%;
 }
 .product-main-img {
-  width: 100%;
-  max-width: 420px;
-  max-height: 320px;
-  object-fit: contain;
+  width: 500px;
+  height: 300px;
+  object-fit: cover;
   margin-bottom: 12px;
 }
 .product-slider-controls {
@@ -146,19 +163,18 @@ export default {
 .product-slider-controls button {
   pointer-events: all;
   background: #fff;
-  border: 1px solid #23A3FF;
-  color: #23A3FF;
+  color: #000;
   font-size: 22px;
-  border-radius: 50%;
   width: 36px;
   height: 36px;
   cursor: pointer;
   margin: 0 8px;
   transition: background 0.2s, color 0.2s;
+  border: none;
 }
 .product-slider-controls button:hover {
-  background: #23A3FF;
-  color: #fff;
+  background: #fff;
+  color: #000;
 }
 .product-thumbs {
   display: flex;
@@ -182,12 +198,12 @@ export default {
 }
 .product-info {
   flex: 1 1 40%;
-  min-width: 220px;
   background: #fff;
   border-radius: 4px;
   padding: 24px 18px;
-  border: 1px solid #eee;
+ 
   margin-left: 0;
+  width: 100%;
 }
 .product-info h3 {
   font-size: 20px;
@@ -198,16 +214,20 @@ export default {
   margin-bottom: 8px;
 }
 .consult-btn {
-  margin-top: 24px;
+  width: 260px;
+  height: 70px;
+  border-radius: 15px;
   border: 1px solid #23A3FF;
+  padding: 35px 94px;
+  gap: 10px;
   background: #fff;
   color: #23A3FF;
-  border-radius: 100px;
-  padding: 10px 0;
-  width: 200px;
   font-size: 16px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .consult-btn:hover {
   background: #23A3FF;
@@ -226,20 +246,33 @@ export default {
 }
 @media (max-width: 1440px) {
   .product-section {
-    max-width: 1200px;
+    max-width: 1160px;
     padding: 24px 8px;
+  }
+  .product-main-img {
+    width: 450px;
+    height: 270px;
   }
 }
 @media (max-width: 1024px) {
   .product-section {
-    max-width: 900px;
+    max-width: 960px;
     padding: 16px 4px;
+  }
+  .product-main-img {
+    width: 400px;
+    height: 240px;
   }
 }
 @media (max-width: 768px) {
   .product-section {
     max-width: 100vw;
     padding: 8px 2vw;
+  }
+  .product-main-img {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
   }
 }
 @media (max-width: 480px) {
