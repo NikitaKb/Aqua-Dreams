@@ -26,6 +26,8 @@
             <button type="submit" class="submit-button">
               Перезвоните мне
             </button>
+            <div v-if="error" style="color: #e53935; margin-top: 10px;">{{ error }}</div>
+            <div v-if="success" style="color: #23A3FF; margin-top: 10px;">Спасибо! Мы свяжемся с вами.</div>
           </form>
 
           <div class="additional-contacts">
@@ -65,9 +67,36 @@ const form = ref({
   phone: ''
 })
 
-const handleSubmit = () => {
-  // Здесь будет логика отправки формы
-  console.log('Form submitted:', form.value)
+const error = ref('');
+const success = ref(false);
+
+const handleSubmit = async () => {
+  error.value = '';
+  success.value = false;
+  if (!form.value.name || !form.value.phone) {
+    error.value = 'Пожалуйста, заполните все поля';
+    return;
+  }
+  try {
+    const response = await fetch('http://localhost:8000/api/contact/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fullName: form.value.name,
+        phone: form.value.phone,
+      }),
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      error.value = 'Ошибка при отправке: ' + errorText;
+      return;
+    }
+    success.value = true;
+    form.value.name = '';
+    form.value.phone = '';
+  } catch (e) {
+    error.value = 'Ошибка при отправке. Попробуйте позже.';
+  }
 }
 </script>
 
