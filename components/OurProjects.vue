@@ -2,7 +2,10 @@
   <section class="our-projects">
     <div class="container">
       <h2 class="section-title">Наши проекты</h2>
-      <div class="slider-container">
+      <div v-if="isLoading" class="loading">
+        Загрузка проектов...
+      </div>
+      <div v-else class="slider-container">
         <button class="nav-button prev" @click="prevSlide">
           <svg width="14" height="22" viewBox="0 0 14 22" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2L3 11L12 20" stroke="white" stroke-width="3" stroke-linecap="square"/>
@@ -54,98 +57,33 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
-const projects = ref([
-  {
-    image: '/images/project_1.png',
-    address: 'г. Таганрог, ул. Святого Отца д. 46',
-    title: 'Частный бассейн',
-    description: 'Современный бассейн с системой фильтрации и подогрева воды',
-    details: [
-      'Размер: 8x4 метра',
-      'Глубина: 1.8м',
-      'Подогрев воды',
-      'Система фильтрации',
-      'Светодиодное освещение'
-    ],
-    isFlipped: false
-  },
-  {
-    image: '/images/project_1.png',
-    address: 'г. Таганрог, ул. Святого Отца д. 49',
-    title: 'Спа-комплекс',
-    description: 'Роскошный бассейн с джакузи и зоной отдыха',
-    details: [
-      'Размер бассейна: 10x5 метров',
-      'Джакузи на 6 персон',
-      'Система противотока',
-      'Декоративное освещение',
-      'Зона отдыха'
-    ],
-    isFlipped: false
-  },
-  {
-    image: '/images/project_1.png',
-    address: 'г. Таганрог, ул. Дзержинского д. 123',
-    title: 'Открытый бассейн',
-    description: 'Большой открытый бассейн для загородного дома',
-    details: [
-      'Размер: 12x6 метров',
-      'Глубина: 2.2м',
-      'Подогрев воды',
-      'Система очистки',
-      'Подсветка'
-    ],
-    isFlipped: false
-  },
-  {
-    image: '/images/project_1.png',
-    address: 'г. Таганрог, ул. Дзержинского д. 123',
-    title: 'Открытый бассейн',
-    description: 'Большой открытый бассейн для загородного дома',
-    details: [
-      'Размер: 12x6 метров',
-      'Глубина: 2.2м',
-      'Подогрев воды',
-      'Система очистки',
-      'Подсветка'
-    ],
-    isFlipped: false
-  },
-  {
-    image: '/images/project_1.png',
-    address: 'г. Таганрог, ул. Дзержинского д. 123',
-    title: 'Открытый бассейн',
-    description: 'Большой открытый бассейн для загородного дома',
-    details: [
-      'Размер: 12x6 метров',
-      'Глубина: 2.2м',
-      'Подогрев воды',
-      'Система очистки',
-      'Подсветка'
-    ],
-    isFlipped: false
-  },
-  {
-    image: '/images/project_1.png',
-    address: 'г. Таганрог, ул. Петровская д. 15',
-    title: 'Крытый бассейн',
-    description: 'Крытый бассейн с современной системой вентиляции',
-    details: [
-      'Размер: 15x4 метров',
-      'Глубина: 1.6м',
-      'Климат-контроль',
-      'Очистка воды',
-      'LED освещение'
-    ],
-    isFlipped: false
-  }
-])
-
+const projects = ref([])
+const isLoading = ref(true)
 const currentSlide = ref(0)
 const itemsPerSlide = ref(2)
 const gap = ref(4.5) // 30px gap as percentage of container width
+
+const fetchProjects = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/api/project/')
+    const data = await response.json()
+    projects.value = data.map(project => ({
+      ...project,
+      isFlipped: project.is_flipped || false,
+      details: project.details.map(detail => detail.text)
+    }))
+  } catch (error) {
+    console.error('Error fetching projects:', error)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(() => {
+  fetchProjects()
+})
 
 const visibleProjects = computed(() => {
   return projects.value
@@ -168,7 +106,7 @@ const nextSlide = () => {
     project.isFlipped = false
   })
   
-  if (currentSlide.value < Math.ceil(projects.value.length / itemsPerSlide.value) - 1) {
+  if (currentSlide.value < projects.value.length - itemsPerSlide.value) {
     currentSlide.value++
   } else {
     currentSlide.value = 0
@@ -184,7 +122,7 @@ const prevSlide = () => {
   if (currentSlide.value > 0) {
     currentSlide.value--
   } else {
-    currentSlide.value = Math.ceil(projects.value.length / itemsPerSlide.value) - 1
+    currentSlide.value = projects.value.length - itemsPerSlide.value
   }
 }
 </script>
@@ -228,7 +166,7 @@ const prevSlide = () => {
   min-width: calc(50% - 15px);
   height: 560px;
   perspective: 1000px;
-  width: 660px;
+  width: calc(50% - 15px);
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -416,15 +354,15 @@ const prevSlide = () => {
   .project-card {
     min-width: calc(50% - 15px);
     height: 560px;
-    width: 660px;
+    width: calc(50% - 15px);
   }
 }
 
 @media (max-width: 1024px) {
   .project-card {
-    min-width: 470px;
+    min-width: calc(50% - 15px);
     height: 380px;
-    width: 470px;
+    width: calc(50% - 15px);
   }
 }
 
@@ -513,5 +451,12 @@ const prevSlide = () => {
     font-size: 14px;
     padding: 12px 30px;
   }
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 18px;
+  color: #23A3FF;
 }
 </style> 
