@@ -16,7 +16,7 @@ const type = route.params.type as string;
 
 <style scoped>
 div {
-  min-height: 100vh;
+
   display: flex;
   flex-direction: column;
 }

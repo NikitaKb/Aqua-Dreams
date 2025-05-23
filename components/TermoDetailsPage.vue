@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="pool-info-block">
-          <h1 class="pool-title">{{ termoData.name }}</h1>
+          <h3 class="pool-title">{{ termoData.name }}</h3>
           <p class="pool-description">{{ termoData.description_short }}</p>
           <button class="pool-consult-btn" @click="showConsultModal = true">Бесплатная консультация</button>
         </div>
@@ -212,7 +212,7 @@ async function fetchTermoData(type: string) {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
+  background: transparent;
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -221,7 +221,7 @@ async function fetchTermoData(type: string) {
   color: #C4944C;
   cursor: pointer;
   z-index: 2;
-  transition: background 0.2s;
+  transition: color 0.2s;
 }
 
 .slider-arrow.left {
@@ -233,7 +233,7 @@ async function fetchTermoData(type: string) {
 }
 
 .slider-arrow:hover {
-  background: #C4944C;
+  background: transparent;
   color: #fff;
 }
 

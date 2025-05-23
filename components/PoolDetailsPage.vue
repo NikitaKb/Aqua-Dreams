@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="pool-info-block">
-          <h1 class="pool-title">{{ poolData.name }}</h1>
+          <h3 class="pool-title">{{ poolData.name }}</h3>
           <p class="pool-description">{{ poolData.description_short }}</p>
           <button class="pool-consult-btn" @click="showConsultModal = true">Бесплатная консультация</button>
         </div>
@@ -160,8 +160,6 @@ async function fetchPoolData(type: string) {
   }
 }
 
-
-
 </script>
 
 <style scoped>
@@ -215,7 +213,7 @@ async function fetchPoolData(type: string) {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.8);
+  background: transparent;
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -224,7 +222,7 @@ async function fetchPoolData(type: string) {
   color: #23A3FF;
   cursor: pointer;
   z-index: 2;
-  transition: background 0.2s;
+  transition: color 0.2s;
 }
 
 .slider-arrow.left {
@@ -236,7 +234,7 @@ async function fetchPoolData(type: string) {
 }
 
 .slider-arrow:hover {
-  background: #23A3FF;
+  background: transparent;
   color: #fff;
 }
 
@@ -245,7 +243,7 @@ async function fetchPoolData(type: string) {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 40px;
+  
 }
 
 .pool-title {

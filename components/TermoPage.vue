@@ -2,22 +2,12 @@
     <div class="termo-page">
         <div class="hero-section">
           <div class="hero-content">
-            <h1 class="hero-title">СОЗДАЙТЕ СВОЮ ИДЕАЛЬНУЮ ТЕРМА-ЗОНУ</h1>
+            <h3 class="hero-title">СОЗДАЙТЕ СВОЮ ИДЕАЛЬНУЮ ТЕРМА-ЗОНУ</h3>
             <p class="hero-description">
                 Комплексные услуги по проектированию, строительству и обслуживанию бассейнов для любого бюджета
             </p>
           </div>
-          <div class="hero-gallery">
-            <div class="gallery-item gallery-item-small">
-              <img src="/images/termo-l1.png" alt="Хамам" class="gallery-image">
-            </div>
-            <div class="gallery-item gallery-item-large">
-              <img src="/images/termo-b.png" alt="Сауна" class="gallery-image">
-            </div>
-            <div class="gallery-item gallery-item-small">
-              <img src="/images/termo-l2.png" alt="СПА" class="gallery-image">
-            </div>
-          </div>
+          
         </div>
       
       </div>
@@ -64,18 +54,15 @@
     
     .hero-title {
       color: #FFFFFF;
-      font-size: 48px;
       font-weight: 500;
       margin-bottom: 20px;
-      line-height: 1.2;
+     
       letter-spacing: 0.05em;
     }
     
     .hero-description {
       color: #FFFFFF;
-      font-size: 24px;
-      line-height: 1.5;
-      margin-bottom: 100px;
+      
       font-weight: 300;
     }
     
@@ -110,11 +97,12 @@
       height: 100%;
       object-fit: cover;
     }
-    
+ 
     @media (max-width: 1024px) {
       .hero-section {
-        height: auto;
-        padding-top: 120px;
+        height: 720px !important;
+        justify-content: center;
+        padding-top: 0 !important;
       }
     
       .hero-gallery {
@@ -236,6 +224,16 @@
       }
     }
     
+    @media (max-width: 375px) {
+      .hero-section {
+        height: 817px !important;
+      }
+      .hero-section {
+    justify-content: center;
+    padding-top: 0;
+  }
+    }
+    
     .pool-types {
       padding: 100px 0;
       background: #fff;
@@ -343,5 +341,11 @@
         font-size: 14px;
       }
     }
+    @media (max-width: 1322px) {
+  .hero-gallery {
+    
+    display: none;
+  }
+}
     </style>
     

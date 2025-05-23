@@ -9,9 +9,13 @@
           <img :src="`http://127.0.0.1:8000${pool.main_image_url}`" :alt="pool.name" class="pool-image">
           <div class="pool-content">
             <h3 class="pool-title">{{ pool.name }}</h3>
-            <p class="pool-description">{{ pool.description_short }}</p>
+            <p class="pool-description">
+              <template v-if="isMobile">{{ getShortDescription(pool.description_short) }}</template>
+              <template v-else>{{ pool.description_short }}</template>
+            </p>
             <NuxtLink :to="`/termo/${pool.slug}`" class="pool-button">Подробнее</NuxtLink>
           </div>
+          
         </div>
       </div>
     </div>
@@ -19,14 +23,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const pools = ref([]);
+const isMobile = ref(false);
+
+function checkMobile() {
+  isMobile.value = window.innerWidth <= 425;
+}
 
 onMounted(async () => {
   const res = await fetch('http://localhost:8000/api/terms/');
   pools.value = await res.json();
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
 });
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile);
+});
+
+function getShortDescription(desc) {
+  if (!desc) return '';
+  const idx = desc.indexOf('.')
+  return idx !== -1 ? desc.slice(0, idx + 1) : desc;
+}
 </script>
 
 <style scoped>
@@ -109,21 +130,22 @@ margin-top: 100px;
 
 .pool-button {
   display: inline-block;
-  background: #C4944C;
-  color: #fff;
-  padding: 16px 60px;
+  background: transparent;
+  color: #C4944C;
+  border: 1.5px solid #C4944C;
+  padding: 12px 30px;
   border-radius: 100px;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   transition: all 0.3s ease;
   align-self: flex-start;
-  border: none;
 }
 
 .pool-button:hover {
   background: #C4944C;
-  transform: scale(1.05);
+  color: #fff;
+  border-color: #C4944C;
 }
 
 @media (max-width: 1024px) {
@@ -164,6 +186,12 @@ margin-top: 100px;
   .pool-button {
     font-size: 12px;
     padding: 8px 16px;
+    border: 1.5px solid #C4944C;
+    color: #C4944C;
+  }
+  .pool-button:hover {
+    background: #C4944C;
+    color: #fff;
   }
 }
 
@@ -191,6 +219,12 @@ margin-top: 100px;
   .pool-button {
     padding: 8px 16px;
     font-size: 12px;
+    border: 1.5px solid #C4944C;
+    color: #C4944C;
+  }
+  .pool-button:hover {
+    background: #C4944C;
+    color: #fff;
   }
 }
 
@@ -215,13 +249,26 @@ margin-top: 100px;
   .pool-content {
     padding: 15px;
   }
+}
 
-  .pool-title {
-    font-size: 20px;
+@media (max-width: 375px) {
+  .pool-card {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
   }
-
-  .pool-description {
-    font-size: 11px;
+  .pool-button {
+    align-self: center;
+    margin-top: 12px;
+    border: 1.5px solid #C4944C;
+    color: #C4944C;
+    padding: 10px 0;
+    width: 180px;
+    text-align: center;
+  }
+  .pool-button:hover {
+    background: #C4944C;
+    color: #fff;
   }
 }
 </style> 

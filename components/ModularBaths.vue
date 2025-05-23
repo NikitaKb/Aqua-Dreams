@@ -278,8 +278,7 @@
     max-width: 480px;
   }
   .bath-image {
-    max-width: 520px;
-    height: 380px;
+   
   }
   .bath-title {
     font-size: 40px;

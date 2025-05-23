@@ -2,22 +2,12 @@
 <div class="pools-page">
     <div class="hero-section">
       <div class="hero-content">
-        <h1 class="hero-title">СОЗДАЙТЕ СВОЙ ИДЕАЛЬНЫЙ БАССЕЙН</h1>
+        <h3 class="hero-title">СОЗДАЙТЕ СВОЙ ИДЕАЛЬНЫЙ БАССЕЙН</h3>
         <p class="hero-description">
           Комплексные услуги по проектированию, строительству и обслуживанию бассейнов для любого бюджета
         </p>
       </div>
-      <div class="hero-gallery">
-        <div class="gallery-item gallery-item-small">
-          <img src="/images/hero_1.png" alt="Частный бассейн" class="gallery-image">
-        </div>
-        <div class="gallery-item gallery-item-large">
-          <img src="/images/hero_2.png" alt="Спа бассейн" class="gallery-image">
-        </div>
-        <div class="gallery-item gallery-item-small">
-          <img src="/images/hero_3.png" alt="Вечерний бассейн" class="gallery-image">
-        </div>
-      </div>
+      
     </div>
   
   </div>
@@ -64,17 +54,17 @@
 
 .hero-title {
   color: #FFFFFF;
-  font-size: 48px;
+ margin-top: 134px;
   font-weight: 500;
   margin-bottom: 20px;
-  line-height: 1.2;
+  
 }
 
 .hero-description {
   color: #FFFFFF;
-  font-size: 24px;
-  line-height: 1.5;
-  margin-bottom: 100px;
+  margin-bottom: 134px;
+ 
+ 
 }
 
 .hero-gallery {
@@ -94,14 +84,19 @@
   border-radius: 15px;
   overflow: hidden;
   height: 300px;
+  max-width: 100%;
 }
 
 .gallery-item-small {
-  width: 373px;
+  width: 375px;
+  height: 300px;
+  max-width: 100%;
 }
 
 .gallery-item-large {
-  width: 576px;
+  width: 570px;
+  height: 300px;
+  max-width: 100%;
 }
 
 .gallery-image {
@@ -112,63 +107,39 @@
 
 @media (max-width: 1024px) {
   .hero-section {
-    height: auto;
-    padding-top: 120px;
+    height: 720px !important;
+    justify-content: center;
+    padding-top: 0 !important;
   }
-
   .hero-gallery {
-    flex-direction: row;
-    padding: 0 20px;
-    gap: 10px;
-    margin-top: 100px;
+    max-width: 960px;
+    padding: 0 10px;
+    gap: 8px;
   }
-
+}
+@media (max-width: 1322px) {
+  .hero-gallery {
+    
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .hero-gallery {
+    max-width: 100%;
+    padding: 0 4px;
+    gap: 6px;
+    display: none;
+  }
+  .gallery-item {
+    height: 146px;
+  }
   .gallery-item-small {
-    width: 200px;
-    height: 200px;
+    width: 194px;
+    height: 146px;
   }
-
   .gallery-item-large {
-    width: 300px;
-    height: 200px;
-  }
-
-  .hero-title {
-    font-size: 36px;
-  }
-
-  .hero-description {
-    font-size: 20px;
-    margin-bottom: 50px;
-  }
-
-  .pool-types {
-    padding: 80px 0;
-  }
-
-  .section-title {
-    font-size: 32px;
-  }
-
-  .section-subtitle {
-    font-size: 16px;
-    margin-bottom: 40px;
-  }
-
-  .pool-card {
-    height: 350px;
-  }
-
-  .pool-content {
-    padding: 30px;
-  }
-
-  .pool-title {
-    font-size: 28px;
-  }
-
-  .pool-description {
-    font-size: 14px;
+    width: 292px;
+    height: 146px;
   }
 }
 
@@ -176,62 +147,20 @@
   .hero-section {
     padding-top: 80px;
   }
-
   .hero-gallery {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 83px;
+    max-width: 100%;
+    padding: 0;
+    gap: 4px;
   }
-  
-  .gallery-item-small {
-    display: none;
-  }
-  
-  .gallery-item-large {
-    width: 100%;
-    height: 200px;
-  }
-  
-  .hero-content {
-    padding: 40px 0;
-  }
-  
-  .hero-title {
-    font-size: 24px;
-  }
-  
-  .hero-description {
-    font-size: 14px;
-  }
+}
 
-  .pool-types {
-    padding: 60px 0;
+@media (max-width: 375px) {
+  .hero-section {
+    height: 817px !important;
   }
-
-  .section-title {
-    font-size: 28px;
-  }
-
-  .section-subtitle {
-    font-size: 14px;
-    margin-bottom: 30px;
-  }
-
-  .pool-card {
-    height: 300px;
-  }
-
-  .pool-content {
-    padding: 20px;
-  }
-
-  .pool-title {
-    font-size: 24px;
-  }
-
-  .pool-description {
-    font-size: 12px;
+  .hero-section {
+    justify-content: center;
+    padding-top: 0;
   }
 }
 

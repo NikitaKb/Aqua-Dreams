@@ -9,9 +9,14 @@
           <img :src="`http://127.0.0.1:8000${pool.main_image_url}`" :alt="pool.name" class="pool-image">
           <div class="pool-content">
             <h3 class="pool-title">{{ pool.name }}</h3>
-            <p class="pool-description">{{ pool.description_short }}</p>
+            <p class="pool-description">
+              <template v-if="isMobile">{{ getShortDescription(pool.description_short) }}</template>
+              <template v-else>{{ pool.description_short }}</template>
+
+            </p>
             <NuxtLink :to="`/pools/${pool.slug}`" class="pool-button">Подробнее</NuxtLink>
           </div>
+          
         </div>
       </div>
     </div>
@@ -19,14 +24,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const pools = ref([]);
+const isMobile = ref(false);
+
+function checkMobile() {
+  isMobile.value = window.innerWidth <= 425;
+}
 
 onMounted(async () => {
   const res = await fetch('http://localhost:8000/api/pools/');
   pools.value = await res.json();
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
 });
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile);
+});
+
+function getShortDescription(desc) {
+  if (!desc) return '';
+  const idx = desc.indexOf('.')
+  return idx !== -1 ? desc.slice(0, idx + 1) : desc;
+}
 </script>
 
 <style scoped>
@@ -105,21 +127,22 @@ onMounted(async () => {
 
 .pool-button {
   display: inline-block;
-  background: #23A3FF;
-  color: #fff;
-  padding: 16px 60px;
+  background: transparent;
+  color: #23A3FF;
+  border: 1.5px solid #23A3FF;
+  padding: 12px 30px;
   border-radius: 100px;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
   transition: all 0.3s ease;
   align-self: flex-start;
-  border: none;
 }
 
 .pool-button:hover {
-  background: #1e8edf;
-  transform: scale(1.05);
+  background: #23A3FF;
+  color: #fff;
+  border-color: #23A3FF;
 }
 
 @media (max-width: 1024px) {
@@ -142,7 +165,7 @@ onMounted(async () => {
   }
 
   .pool-card {
-    height: 260px;
+    height: 380px;
   }
 
   .pool-content {
@@ -218,6 +241,18 @@ onMounted(async () => {
 
   .pool-description {
     font-size: 11px;
+  }
+}
+
+@media (max-width: 375px) {
+  .pool-card {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+  }
+  .pool-button {
+    align-self: center;
+    margin-top: 12px;
   }
 }
 </style> 

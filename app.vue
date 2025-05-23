@@ -11,25 +11,49 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
 
+:root {
+  --container-max-width: 1360px;
+  --container-padding: 5vw;
+  --base-font-size: 18px;
+  --scale-factor: 1;
+  --viewport-width: 100vw;
+  --viewport-height: 100vh;
+  --base-padding: 1.25rem;
+}
+button,
+a.button,
+.nuxt-link-exact-active,
+.pool-button,
+.pool-consult-btn {
+  border-radius: 15px !important;
+}
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  font-size: var(--base-font-size);
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   font-family: 'Hanken Grotesk', sans-serif;
   line-height: 1.6;
   min-height: 100vh;
-  font-size: 18px;
+  font-size: 1rem;
   overflow-x: hidden;
+  width: 100%;
 }
 
 .container {
-  max-width: 1360px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 calc(var(--container-padding) * var(--scale-factor));
+  position: relative;
 }
 
 /* Глобальные стили для кнопок */
@@ -37,13 +61,16 @@ body {
   background: transparent;
   color: #23A3FF;
   border: 1px solid #23A3FF;
-  padding: 16px 40px;
+  padding: calc(1rem * var(--scale-factor)) calc(2.5rem * var(--scale-factor));
   border-radius: 100px;
-  font-size: 18px;
+  font-size: calc(1rem * var(--scale-factor));
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
   text-decoration: none;
+  white-space: nowrap;
+  transform-origin: center;
+  transform: scale(var(--scale-factor));
 }
 
 .button-primary:hover {
@@ -52,36 +79,58 @@ body {
 }
 
 h1 {
-  font-size: 72px;
+  font-size: calc(4rem * var(--scale-factor));
   font-weight: 500;
+  line-height: 1.2;
+  transform-origin: center;
+  transform: scale(var(--scale-factor));
 }
 
 h2 {
-  font-size: 54px;
+  font-size: calc(3rem * var(--scale-factor));
   font-weight: 500;
+  line-height: 1.2;
+  transform-origin: center;
+ 
 }
 
 h3 {
-  font-size: 45px;
+  font-size: calc(2.5rem * var(--scale-factor));
   font-weight: 500;
+  line-height: 1.2;
+  transform-origin: center;
+ 
 }
 
 h4 {
-  font-size: 36px;
+  font-size: calc(2rem * var(--scale-factor));
   font-weight: 500;
+  line-height: 1.2;
+  transform-origin: center;
+ 
 }
 
 h5 {
-  font-size: 27px;
+  font-size: calc(1.5rem * var(--scale-factor));
   font-weight: 500;
+  line-height: 1.2;
+  transform-origin: center;
+
 }
 
 h6 {
-  font-size: 22.5px;
+  font-size: calc(1.25rem * var(--scale-factor));
   font-weight: 500;
+  line-height: 1.2;
+  transform-origin: center;
+  transform: scale(var(--scale-factor));
 }
 
 main {
-  min-height: 100vh;
+ 
+  width: 100%;
+  overflow-x: hidden;
 }
+
+
 </style>
