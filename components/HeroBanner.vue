@@ -90,7 +90,7 @@
 
 @media (max-width: 768px) {
   .hero {
-    width: 768px;
+    width: 100%;
     height: 570px;
     background-image: url('/images/pool-bg.jpg');
     background-size: cover;
@@ -137,13 +137,15 @@
   }
   .container {
     padding: 0 16px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
 @media (max-width: 375px) {
   .hero {
     height: 100vh;
-    width: 100vw;
+    width: 100%;
     min-height: 500px;
   }
   .hero-logo {
@@ -158,6 +160,8 @@
   }
   .container {
     padding: 0 8px;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 </style> 

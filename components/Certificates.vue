@@ -64,6 +64,19 @@
       max-width: 50px;
     }
   }
+  @media (max-width: 1024px) {
+    .section-title {
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    .certificates {
+      gap: 20px;
+    }
+    .certificates img {
+      max-width: 200px;
+      height: auto;
+    }
+  }
   </style>
   
    

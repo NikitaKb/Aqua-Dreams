@@ -127,10 +127,44 @@ h6 {
 }
 
 main {
- 
+  
   width: 100%;
   overflow-x: hidden;
 }
 
+/* Media Queries для масштабирования */
+@media screen and (max-width: 1360px) {
+  :root {
+    --scale-factor: 0.9;
+    --container-padding: 6vw;
+  }
+}
 
+@media screen and (max-width: 1200px) {
+  :root {
+    --scale-factor: 0.8;
+    --container-padding: 7vw;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  :root {
+    --scale-factor: 0.7;
+    --container-padding: 8vw;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  :root {
+    --scale-factor: 0.6;
+    --container-padding: 10vw;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  :root {
+    --scale-factor: 0.5;
+    --container-padding: 12vw;
+  }
+}
 </style>

@@ -56,9 +56,7 @@
       </div>
     </div>
 
-    <div class="cta-button">
-      <button class="button-primary">Оставить заявление</button>
-    </div>
+    
   </section>
 </template>
 

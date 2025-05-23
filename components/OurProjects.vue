@@ -57,13 +57,32 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const projects = ref([])
 const isLoading = ref(true)
 const currentSlide = ref(0)
-const itemsPerSlide = ref(2)
-const gap = ref(4.5) // 30px gap as percentage of container width
+const itemsPerSlide = ref(2) // Default for larger screens
+const gap = ref(4.5) // 30px gap as percentage of container width (approx)
+
+let intervalId = null;
+
+function updateItemsPerSlide() {
+  // Adjust breakpoint as needed. 750px is just an example.
+  // This will show 1 item below 750px, and 2 items above.
+  if (window.innerWidth < 750) {
+    itemsPerSlide.value = 1;
+    // You might also want to adjust the 'gap' value here for mobile
+    // For example: gap.value = 2; // for 16px gap on mobile if using width: calc(100% - gap_in_px)
+  } else {
+    itemsPerSlide.value = 2;
+    // Reset gap for larger screens if adjusted for mobile
+    // For example: gap.value = 4.5; // for 30px gap on desktop
+  }
+   // Ensure currentSlide is within valid range after changing itemsPerSlide
+  const maxSlide = Math.max(0, projects.value.length - itemsPerSlide.value);
+  currentSlide.value = Math.min(currentSlide.value, maxSlide);
+}
 
 const fetchProjects = async () => {
   try {
@@ -82,47 +101,61 @@ const fetchProjects = async () => {
 }
 
 onMounted(() => {
-  fetchProjects()
-})
+  fetchProjects();
+  updateItemsPerSlide(); // Set initial value
+  window.addEventListener('resize', updateItemsPerSlide); // Update on resize
+  intervalId = setInterval(nextSlide, 8000);
+});
+
+onUnmounted(() => {
+  if (intervalId) {
+    clearInterval(intervalId);
+  }
+  window.removeEventListener('resize', updateItemsPerSlide); // Clean up listener
+});
 
 const visibleProjects = computed(() => {
+  // The current transform logic handles showing part of adjacent slides
+  // based on item width, gap, and container padding/margin.
   return projects.value
 })
 
 const flipCard = (index) => {
-  // Сначала закрываем все открытые карточки, кроме текущей
   projects.value.forEach((project, idx) => {
     if (idx !== index) {
       project.isFlipped = false
     }
   })
-  // Затем переворачиваем текущую карточку
   projects.value[index].isFlipped = !projects.value[index].isFlipped
 }
 
 const nextSlide = () => {
-  // Закрываем все открытые карточки перед сменой слайда
   projects.value.forEach(project => {
     project.isFlipped = false
   })
   
-  if (currentSlide.value < projects.value.length - itemsPerSlide.value) {
-    currentSlide.value++
+  // Calculate the maximum slide index based on the number of items
+  // and how many fit per view (itemsPerSlide.value).
+  const maxSlide = projects.value.length - itemsPerSlide.value;
+
+  if (currentSlide.value < maxSlide) {
+    currentSlide.value++;
   } else {
-    currentSlide.value = 0
+    currentSlide.value = 0; // Loop back to the beginning
   }
 }
 
 const prevSlide = () => {
-  // Закрываем все открытые карточки перед сменой слайда
   projects.value.forEach(project => {
     project.isFlipped = false
   })
   
+   const maxSlide = projects.value.length - itemsPerSlide.value;
+
   if (currentSlide.value > 0) {
-    currentSlide.value--
+    currentSlide.value--;
   } else {
-    currentSlide.value = projects.value.length - itemsPerSlide.value
+     currentSlide.value = maxSlide; // Loop to the end
   }
 }
 </script>
@@ -372,7 +405,7 @@ const prevSlide = () => {
   }
 
   .project-card {
-    min-width: 100%;
+    min-width: 100%; /* Card takes full width on smaller screens */
     height: 400px;
     width: 100%;
   }
@@ -383,12 +416,12 @@ const prevSlide = () => {
   }
 
   .projects-slider {
-    gap: 16px;
+    gap: 16px; /* Adjust gap for mobile */
   }
 
   .project-card {
-    min-width: calc(100% - 32px);
-    margin: 0 16px;
+    min-width: calc(100% - 32px); /* Adjust min-width considering padding/margin */
+    margin: 0 16px; /* Add margin to show parts of adjacent slides */
   }
 }
 
@@ -451,6 +484,14 @@ const prevSlide = () => {
     font-size: 14px;
     padding: 12px 30px;
   }
+}
+
+/* Add specific styles for 375px if needed */
+@media (max-width: 375px) {
+  .project-card {
+     /* Further adjustments for very small screens */
+  }
+  /* Adjust gap, padding, etc. */
 }
 
 .loading {

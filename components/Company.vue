@@ -81,5 +81,18 @@
       max-height: 20px;
     }
   }
+  @media (max-width: 1024px) {
+    .partners-title {
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    .partners-logos {
+      gap: 30px;
+    }
+    .partners-logos img {
+      max-height: 50px;
+      max-width: 130px;
+    }
+  }
   </style>
   

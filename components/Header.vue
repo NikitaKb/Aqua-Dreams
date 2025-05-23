@@ -366,6 +366,15 @@ onUnmounted(() => {
   .burger-menu {
     display: block;
   }
+
+  .header {
+    /* Adjust header padding/height if needed for smaller logo */
+  }
+
+  .logo-image {
+    height: 40px; /* Smaller height for mobile */
+    width: auto;
+  }
 }
 
 .line {
