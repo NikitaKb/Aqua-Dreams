@@ -1,5 +1,5 @@
 <template>
-  <section class="pool-details-page">
+  <section class="pool-details-page" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
     <div class="container">
       <div class="pool-main-block">
         <div class="pool-image-block">
@@ -7,6 +7,15 @@
             <img :src="currentImage" :alt="termoData.name" class="pool-main-image" />
             <button v-if="termoData.images && termoData.images.length > 1" class="slider-arrow left" @click="prevImage">&#60;</button>
             <button v-if="termoData.images && termoData.images.length > 1" class="slider-arrow right" @click="nextImage">&#62;</button>
+          </div>
+          <div class="slider-dots" v-if="termoData.images && termoData.images.length > 1">
+            <span
+              v-for="(image, index) in termoData.images"
+              :key="index"
+              class="dot"
+              :class="{ active: index === currentIndex }"
+              @click="goToImage(index)"
+            ></span>
           </div>
         </div>
         <div class="pool-info-block">
@@ -49,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive, onMounted, watch } from 'vue';
+import { computed, ref, reactive, onMounted, watch, onBeforeUnmount } from 'vue';
 import { defineProps } from 'vue';
 import { useRoute } from 'vue-router';
 import ConsultationModal from './ConsultationModal.vue';
@@ -116,15 +125,60 @@ function nextImage() {
   currentIndex.value = (currentIndex.value + 1) % images.length;
 }
 
+function goToImage(index: number) {
+  currentIndex.value = index;
+}
+
 const showConsultModal = ref(false);
+
+let touchStartX = 0;
+let touchEndX = 0;
+const minSwipeDistance = 50; // pixels
+
+function handleTouchStart(event: TouchEvent) {
+  touchStartX = event.changedTouches[0].screenX;
+}
+
+function handleTouchMove(event: TouchEvent) {
+  touchEndX = event.changedTouches[0].screenX;
+}
+
+function handleTouchEnd() {
+  const distance = touchEndX - touchStartX;
+
+  if (distance > minSwipeDistance) {
+    // Swipe right
+    prevImage();
+  } else if (distance < -minSwipeDistance) {
+    // Swipe left
+    nextImage();
+  }
+
+  // Reset touch values
+  touchStartX = 0;
+  touchEndX = 0;
+}
 
 const route = useRoute();
 
 const getType = (t: string | string[]) => Array.isArray(t) ? t[0] : t;
 
+const isMobile = ref(false);
+
+function checkMobile() {
+  isMobile.value = window.innerWidth <= 768; // Using 768px breakpoint for mobile
+}
+
 onMounted(() => {
   fetchTermoData(getType(route.params.type));
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
 });
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkMobile);
+});
+
 watch(() => route.params.type, (newType) => {
   fetchTermoData(getType(newType));
 });
@@ -329,20 +383,16 @@ async function fetchTermoData(type: string) {
 }
 @media (max-width: 1024px) {
   .pool-main-block {
-    flex-direction: column;
+    flex-direction: row;
     gap: 30px;
-    align-items: center;
   }
   .pool-info-block {
     margin-top: 0;
-    align-items: center;
   }
   .pool-title {
     font-size: 28px;
-    text-align: center;
   }
   .pool-description {
-    text-align: center;
   }
   .advantages-columns {
     flex-direction: column;
@@ -360,6 +410,58 @@ async function fetchTermoData(type: string) {
     aspect-ratio: 760 / 490;
   }
 }
+@media (max-width: 768px) {
+  .pool-main-block {
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+  }
+  .pool-image-block {
+    width: 100%;
+  }
+  .pool-info-block {
+    align-items: center;
+  }
+  .pool-title,
+  .pool-description {
+  }
+  .pool-consult-btn {
+    align-self: center;
+  }
+  .advantages-columns {
+    flex-direction: column;
+    gap: 30px;
+  }
+  .advantages-col {
+    gap: 30px;
+  }
+  .advantage-number {
+    font-size: 40px;
+    min-width: 40px;
+  }
+  .slider-arrow {
+    display: none;
+  }
+
+  .slider-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin: 0 4px;
+    cursor: pointer;
+  }
+
+  .dot.active {
+    background-color: #C4944C;
+  }
+}
 @media (max-width: 600px) {
   .pool-main-block {
     padding: 0 10px;
@@ -374,6 +476,22 @@ async function fetchTermoData(type: string) {
   .pool-slider {
     max-width: 100%;
     aspect-ratio: 760 / 490;
+  }
+}
+@media (max-width: 375px) {
+  .pool-main-block {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .pool-image-block {
+    width: 100%;
+  }
+  .pool-info-block {
+    align-items: flex-start;
+  }
+  .pool-consult-btn {
+    align-self: flex-start;
+    padding: 20px;
   }
 }
 </style> 
