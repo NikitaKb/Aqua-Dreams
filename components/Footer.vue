@@ -118,8 +118,7 @@
 }
 
 .contact-item:first-child .contact-icon {
-  width: 27px;
-  height: 49px;
+
 }
 
 .contact-text {

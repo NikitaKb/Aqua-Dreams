@@ -254,7 +254,6 @@
   .pools-section {
     padding-left: 32px;
     padding-right: 32px;
-   
     margin: 0 auto;
   }
   .services-grid {
@@ -286,6 +285,51 @@
   }
   .service-overlay {
     padding: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .pools-section {
+    padding-left: 24px;
+    padding-right: 24px;
+    margin: 0 auto;
+  }
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .grid-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+  .service-card,
+  .service-card.large {
+    height: 240px;
+    max-width: 100%;
+  }
+  /* Первый ряд */
+  .grid-row:nth-child(1) .service-card:first-child { width: 480px; }
+  .grid-row:nth-child(1) .service-card:last-child { width: 380px; }
+  /* Второй ряд */
+  .grid-row:nth-child(2) .service-card:first-child { width: 380px; }
+  .grid-row:nth-child(2) .service-card:last-child { width: 480px; }
+  /* Третий ряд */
+  .grid-row:nth-child(3) .service-card:first-child { width: 480px; }
+  .grid-row:nth-child(3) .service-card:last-child { width: 380px; }
+  .service-title {
+    font-size: 24px;
+  }
+  .service-overlay {
+    padding: 16px;
+  }
+  .section-title {
+    font-size: 32px;
+  }
+  .section-description {
+    font-size: 15px;
+    margin-bottom: 40px;
   }
 }
 
@@ -321,6 +365,60 @@
 }
 
 @media (max-width: 375px) {
+  .pools-section {
+    padding: 24px 0;
+  }
+  .section-title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .section-description {
+    font-size: 13px;
+    margin-bottom: 18px;
+    padding: 0 8px;
+  }
+  .services-grid {
+    gap: 8px;
+    margin-bottom: 18px;
+    align-items: center;
+  }
+  .grid-row {
+    gap: 8px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .service-card,
+  .service-card.large {
+    width: 355px !important;
+    min-width: 355px !important;
+    max-width: 355px !important;
+    height: 155px !important;
+    min-height: 155px !important;
+    max-height: 155px !important;
+    margin: 0 auto 8px auto;
+    display: block;
+  }
+  .service-overlay {
+    padding: 10px;
+  }
+  .service-title {
+    font-size: 15px;
+  }
+  .cta-button {
+    margin-top: 10px;
+  }
+  .button-primary {
+    font-size: 15px;
+    padding: 10px 0;
+    width: 180px;
+    border-radius: 100px;
+  }
+  br {
+    display: none;
+  }
+}
+
+@media (max-width: 430px) {
   .pools-section {
     padding: 24px 0;
   }

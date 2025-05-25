@@ -232,35 +232,132 @@
 
 @media (max-width: 480px) {
   .modular-baths {
-    padding: 40px 0;
+    padding: 20px 0;
+    margin-top: 20px;
   }
-  
+  .container {
+    padding: 0 4px;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
   .bath-block {
-    margin-bottom: 40px;
+    width: 100%;
+    max-width: 100vw;
+    flex-direction: column;
+    margin-bottom: 32px;
   }
-  
-  .bath-image {
-    height: 300px;
-  }
-  
   .bath-content {
-    padding: 20px;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 8px;
+    text-align: center;
   }
-  
   .bath-title {
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
-  
   .bath-description {
     font-size: 12px;
-    margin-bottom: 15px;
-    -webkit-line-clamp: 2;
+    margin-bottom: 12px;
   }
-  
+  .bath-image {
+    width: 100%;
+    max-width: 100%;
+    height: 220px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+  .bath-image img {
+    border-radius: 12px;
+  }
+  .button-wrapper {
+    margin-top: 8px;
+  }
   .button-primary {
     font-size: 12px;
     padding: 10px 20px;
+    width: 160px;
+  }
+}
+
+@media (max-width: 375px) {
+  .modular-baths {
+    padding: 20px 0;
+    margin-top: 20px;
+  }
+  .container {
+    padding: 0 4px;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+  .bath-block {
+    width: 100%;
+    max-width: 100vw;
+    flex-direction: column !important;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 0;
+  }
+  .bath-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    text-align: center;
+    align-items: center;
+  }
+  .bath-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+    text-align: center;
+    font-weight: 500;
+  }
+  .bath-block-reverse .bath-title {
+    color: #23A3FF;
+  }
+  .bath-description {
+    font-size: 13px;
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .bath-image {
+    width: 100%;
+    max-width: 355px;
+    height: 195px;
+    margin: 0 auto 8px auto;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bath-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+    display: block;
+  }
+  .button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+    margin-bottom: 0;
+    align-self: unset;
+  }
+  .button-primary {
+    font-size: 14px;
+    padding: 10px 0;
+    width: 180px;
+    border-radius: 100px;
+    text-align: center;
+    border: 1px solid #23A3FF;
+    color: #23A3FF;
+    background: #fff;
+    font-weight: 500;
+    transition: all 0.3s ease;
   }
 }
 
@@ -295,7 +392,6 @@
   }
   .bath-block,
   .bath-block-reverse {
-   
     gap: 24px;
     align-items: center;
     margin-bottom: 60px;
@@ -331,6 +427,61 @@
     border: 1px solid #23A3FF;
     font-size: 16px;
     padding: 16px 40px;
+  }
+  .button-primary:hover {
+    background: #23A3FF;
+    color: white;
+  }
+  .button-wrapper {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    max-width: 900px;
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+    box-sizing: border-box;
+  }
+  .bath-block,
+  .bath-block-reverse {
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 50px;
+  }
+  .bath-content {
+    width: 50%;
+    max-width: 100%;
+    padding: 0;
+  }
+  .bath-image {
+    width: 50%;
+    max-width: 100%;
+    height: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .bath-title {
+    font-size: 32px;
+    margin-bottom: 16px;
+    color: #C77D47;
+  }
+  .bath-block-reverse .bath-title {
+    color: #23A3FF;
+  }
+  .bath-description {
+    font-size: 15px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  .button-primary {
+    background: transparent;
+    color: #23A3FF;
+    border: 1px solid #23A3FF;
+    font-size: 15px;
+    padding: 14px 32px;
   }
   .button-primary:hover {
     background: #23A3FF;
@@ -427,86 +578,6 @@
     display: block;
     margin-top: 30px;
     align-self: flex-start;
-  }
-}
-
-@media (max-width: 375px) {
-  .modular-baths {
-    padding: 20px 0;
-    margin-top: 20px;
-  }
-  .container {
-    padding: 0 4px;
-    width: 100%;
-    max-width: 100vw;
-    box-sizing: border-box;
-  }
-  .bath-block {
-    width: 100%;
-    max-width: 100vw;
-    flex-direction: column !important;
-    align-items: center;
-    margin-bottom: 24px;
-    gap: 0;
-  }
-  .bath-content {
-    width: 100%;
-    max-width: 100%;
-    padding: 0;
-    text-align: center;
-    align-items: center;
-  }
-  .bath-title {
-    font-size: 18px;
-    margin-bottom: 8px;
-    text-align: center;
-    font-weight: 500;
-  }
-  .bath-block-reverse .bath-title {
-    color: #23A3FF;
-  }
-  .bath-description {
-    font-size: 13px;
-    margin-bottom: 12px;
-    text-align: center;
-    line-height: 1.5;
-  }
-  .bath-image {
-    width: 100%;
-    max-width: 355px;
-    height: 195px;
-    margin: 0 auto 8px auto;
-    border-radius: 16px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .bath-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 16px;
-    display: block;
-  }
-  .button-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 8px;
-    margin-bottom: 0;
-    align-self: unset;
-  }
-  .button-primary {
-    font-size: 14px;
-    padding: 10px 0;
-    width: 180px;
-    border-radius: 100px;
-    text-align: center;
-    border: 1px solid #23A3FF;
-    color: #23A3FF;
-    background: #fff;
-    font-weight: 500;
-    transition: all 0.3s ease;
   }
 }
 </style> 

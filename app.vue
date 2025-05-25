@@ -24,9 +24,74 @@ button,
 a.button,
 .nuxt-link-exact-active,
 .pool-button,
-.pool-consult-btn {
+.pool-consult-btn,
+.consult-btn {
   border-radius: 15px !important;
+  transition: all 0.3s ease;
 }
+
+.consult-btn,
+.pool-consult-btn {
+  background: transparent;
+  color: #23A3FF;
+  border: 1.5px solid #23A3FF;
+  border-radius: 12px;
+  padding: 20px 35px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.consult-btn:hover,
+.pool-consult-btn:hover {
+  background: #23A3FF;
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .consult-btn,
+  .pool-consult-btn {
+    padding: 18px 30px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .consult-btn,
+  .pool-consult-btn {
+    padding: 16px 25px;
+    font-size: 14px;
+    width: auto;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .consult-btn,
+  .pool-consult-btn {
+    padding: 14px 20px;
+    font-size: 14px;
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 375px) {
+  .consult-btn,
+  .pool-consult-btn {
+    padding: 12px 16px;
+    font-size: 13px;
+    width: 100%;
+    max-width: 240px;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;

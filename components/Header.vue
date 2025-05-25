@@ -88,7 +88,7 @@ const props = defineProps({
 const isDark = ref(false)
 const isMenuOpen = ref(false)
 const activeDropdown = ref<string | null>(null)
-const SCROLL_THRESHOLD = 1190
+const SCROLL_THRESHOLD = 500
 
 const handleScroll = () => {
   if (props.staticWhite) {
@@ -178,11 +178,11 @@ onUnmounted(() => {
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
 .logo {
   display: block;
+  margin-right: 40px;
 }
 
 .logo-image {
@@ -191,9 +191,13 @@ onUnmounted(() => {
   transition: all 0.3s ease;
 }
 
+.nav {
+  flex-grow: 1;
+}
+
 .nav-list {
   display: flex;
-  gap: 60px;
+  justify-content: space-around;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -281,10 +285,11 @@ onUnmounted(() => {
 .burger-menu span {
   display: block;
   width: 100%;
-  height: 2px;
+  height: 1px;
   background: #fff;
   position: absolute;
   transition: all 0.3s ease;
+  border-radius: 1px;
 }
 
 .burger-menu span:nth-child(1) {
@@ -365,6 +370,10 @@ onUnmounted(() => {
 
   .burger-menu {
     display: block;
+  }
+
+  .header-content {
+    justify-content: space-between;
   }
 
   .header {

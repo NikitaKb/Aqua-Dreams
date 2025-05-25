@@ -19,8 +19,10 @@
               <input 
                 type="tel" 
                 placeholder="+7 XXX XXX XX XX*"
-                v-model="form.phone"
+                :value="formatPhone(form.phone)"
+                @input="onPhoneInput"
                 class="form-input"
+                maxlength="18"
               >
             </div>
             <button type="submit" class="submit-button">
@@ -51,16 +53,14 @@
           </div>
         </div>
         
-        <div class="contacts-map">
-          <img src="/images/map.png" alt="Карта" class="map-image">
-        </div>
+        <div class="contacts-map" ref="mapContainer"></div>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const form = ref({
   name: '',
@@ -69,21 +69,86 @@ const form = ref({
 
 const error = ref('');
 const success = ref(false);
+const mapContainer = ref(null);
+
+function formatPhone(value) {
+  let digits = value.replace(/\D/g, '');
+  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+  if (!digits.startsWith('7')) digits = '7' + digits;
+  digits = digits.slice(0, 11);
+  let result = '+7';
+  if (digits.length > 1) result += ' (' + digits.slice(1, 4);
+  if (digits.length >= 4) result += ') ' + digits.slice(4, 7);
+  if (digits.length >= 7) result += '-' + digits.slice(7, 9);
+  if (digits.length >= 9) result += '-' + digits.slice(9, 11);
+  return result;
+}
+
+function onPhoneInput(e) {
+  const input = e.target;
+  let digits = input.value.replace(/\D/g, '');
+  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+  if (!digits.startsWith('7')) digits = '7' + digits;
+  digits = digits.slice(0, 11);
+  form.value.phone = digits;
+  input.value = formatPhone(digits);
+}
+
+function validatePhone(phone) {
+  return phone.length === 11 && phone.startsWith('7');
+}
+
+const initMap = () => {
+  if (window.ymaps && mapContainer.value) {
+    window.ymaps.ready(() => {
+      const map = new window.ymaps.Map(mapContainer.value, {
+        center: [47.225738, 39.618516], // Москва
+        zoom: 15,
+        controls: ['zoomControl', 'fullscreenControl']
+      });
+
+      // Добавляем маркер
+      const marker = new window.ymaps.Placemark([47.225738, 39.618516], {
+        balloonContent: 'Aquadreams'
+      }, {
+        preset: 'islands#blueStretchyIcon'
+      });
+
+      map.geoObjects.add(marker);
+    });
+  }
+};
+
+onMounted(() => {
+  // Загружаем скрипт Яндекс.Карт
+  const script = document.createElement('script');
+  script.src = 'https://api-maps.yandex.ru/2.1/?apikey=a0c7ab2a-6296-4652-aa6e-cc6427b9bc2a&lang=ru_RU';
+  script.async = true;
+  script.onload = initMap;
+  document.head.appendChild(script);
+});
 
 const handleSubmit = async () => {
   error.value = '';
   success.value = false;
-  if (!form.value.name || !form.value.phone) {
-    error.value = 'Пожалуйста, заполните все поля';
+  
+  if (!form.value.name) {
+    error.value = 'Пожалуйста, введите ваше имя';
     return;
   }
+  
+  if (!validatePhone(form.value.phone)) {
+    error.value = 'Введите номер в формате +7 (XXX) XXX-XX-XX';
+    return;
+  }
+
   try {
     const response = await fetch('http://localhost:8000/api/contact/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         fullName: form.value.name,
-        phone: form.value.phone,
+        phone: '+' + form.value.phone,
       }),
     });
     if (!response.ok) {
@@ -127,12 +192,6 @@ const handleSubmit = async () => {
   height: 560px;
   width: 100%;
   transition: all 0.3s ease;
-}
-
-.map-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .contacts-title {
@@ -315,10 +374,6 @@ const handleSubmit = async () => {
     width: 450px;
     height: 415px;
     flex-shrink: 0;
-  }
-  
-  .map-image {
-    object-fit: cover;
   }
   
   .contacts-title {

@@ -1,11 +1,11 @@
 <template>
   <section class="product-section" v-if="product">
     <div class="breadcrumbs">
-      <router-link to="/">Товары</router-link> &gt;
+      <router-link to="/products">Товары</router-link> &gt;
       <router-link :to="`/catalog/${categorySlug}`">{{ categoryName }}</router-link> &gt;
       {{ product.name }}
     </div>
-    <h1 class="product-title">{{ product.name }}</h1>
+    <h2 class="product-title">{{ product.name }}</h2>
     <div class="product-main">
       <div class="product-slider">
         <img v-if="currentImage" :src="currentImage" :alt="product.name" class="product-main-img" />
@@ -60,18 +60,13 @@ export default {
   },
   computed: {
     images() {
-      if (!this.product) return [];
+      if (!this.product || !this.product.images) return [];
       const BASE_URL = 'http://localhost:8000';
-      const productImages = [];
       
-      if (this.product.image) {
-        productImages.push(this.product.image.startsWith('http') ? this.product.image : `${BASE_URL}${this.product.image}`);
-      }
-      if (this.product.image_second) {
-        productImages.push(this.product.image_second.startsWith('http') ? this.product.image_second : `${BASE_URL}${this.product.image_second}`);
-      }
-      
-      return productImages;
+      return this.product.images.map(imgObj => {
+        const imageUrl = imgObj.image;
+        return imageUrl.startsWith('http') ? imageUrl : `${BASE_URL}${imageUrl}`;
+      });
     },
     currentImage() {
       return this.images[this.currentImageIndex] || this.images[0] || '';

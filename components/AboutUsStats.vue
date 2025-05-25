@@ -237,6 +237,45 @@ onMounted(() => {
   }
 }
 
+@media (max-width: 900px) {
+  .container {
+    padding: 0 24px;
+  }
+  .content-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .stats-images {
+    width: 350px;
+    height: 315px;
+    min-width: 350px;
+    min-height: 315px;
+  }
+  .stats-image {
+    width: 350px;
+    height: 315px;
+  }
+  .stats-block {
+    padding-top: 20px;
+  }
+  .section-title {
+    font-size: 30px;
+    margin-bottom: 16px;
+  }
+  .stats-numbers {
+    gap: 16px;
+  }
+  .stat-value {
+    font-size: 28px;
+  }
+  .stat-description {
+    font-size: 14px;
+    max-width: 80px;
+  }
+}
+
 @media (max-width: 768px) {
   .content-wrapper {
     display: flex;
