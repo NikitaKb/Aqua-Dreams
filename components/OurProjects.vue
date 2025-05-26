@@ -58,7 +58,7 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { API_CONFIG, getApiUrl } from '~/config/api'
+import { getApiUrl } from '~/config/api'
 
 const projects = ref([])
 const isLoading = ref(true)
@@ -92,9 +92,9 @@ function updateItemsPerSlide() {
   currentSlide.value = Math.min(currentSlide.value, maxSlide);
 }
 
-const fetchProjects = async () => {
+async function fetchProjects() {
   try {
-    const response = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.PROJECTS))
+    const response = await fetch(getApiUrl('/api/project/'))
     const data = await response.json()
     projects.value = data.map(project => ({
       ...project,

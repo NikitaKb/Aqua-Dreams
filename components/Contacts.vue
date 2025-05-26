@@ -59,45 +59,62 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { API_CONFIG, getApiUrl } from '~/config/api';
+import { getApiUrl } from '~/config/api'
 
-const form = ref({
+interface FormData {
+  name: string;
+  phone: string;
+}
+
+interface Window {
+  ymaps: any;
+}
+
+declare global {
+  interface Window {
+    ymaps: any;
+  }
+}
+
+const form = ref<FormData>({
   name: '',
   phone: ''
 })
 
-const error = ref('');
-const success = ref(false);
-const mapContainer = ref(null);
+const error = ref<string>('');
+const success = ref<boolean>(false);
+const mapContainer = ref<HTMLElement | null>(null);
 
-function formatPhone(value) {
-  let digits = value.replace(/\D/g, '');
-  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-  if (!digits.startsWith('7')) digits = '7' + digits;
-  digits = digits.slice(0, 11);
-  let result = '+7';
-  if (digits.length > 1) result += ' (' + digits.slice(1, 4);
-  if (digits.length >= 4) result += ') ' + digits.slice(4, 7);
-  if (digits.length >= 7) result += '-' + digits.slice(7, 9);
-  if (digits.length >= 9) result += '-' + digits.slice(9, 11);
-  return result;
-}
+const validatePhone = (phone: string): boolean => {
+  const phoneRegex = /^\(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+  return phoneRegex.test(phone);
+};
 
-function onPhoneInput(e) {
-  const input = e.target;
-  let digits = input.value.replace(/\D/g, '');
-  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-  if (!digits.startsWith('7')) digits = '7' + digits;
-  digits = digits.slice(0, 11);
-  form.value.phone = digits;
+const formatPhone = (value: string): string => {
+  let formattedValue = value.replace(/\D/g, '');
+  
+  if (formattedValue.length > 0) {
+    if (formattedValue.length <= 3) {
+      formattedValue = `(${formattedValue}`;
+    } else if (formattedValue.length <= 6) {
+      formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3)}`;
+    } else if (formattedValue.length <= 8) {
+      formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3, 6)}-${formattedValue.slice(6)}`;
+    } else {
+      formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3, 6)}-${formattedValue.slice(6, 8)}-${formattedValue.slice(8, 10)}`;
+    }
+  }
+  
+  return formattedValue;
+};
+
+const onPhoneInput = (event: Event): void => {
+  const input = event.target as HTMLInputElement;
+  const digits = input.value.replace(/\D/g, '');
   input.value = formatPhone(digits);
-}
-
-function validatePhone(phone) {
-  return phone.length === 11 && phone.startsWith('7');
-}
+};
 
 const initMap = () => {
   if (window.ymaps && mapContainer.value) {
@@ -129,7 +146,7 @@ onMounted(() => {
   document.head.appendChild(script);
 });
 
-const handleSubmit = async () => {
+const handleSubmit = async (): Promise<void> => {
   error.value = '';
   success.value = false;
   
@@ -144,7 +161,7 @@ const handleSubmit = async () => {
   }
 
   try {
-    const response = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.CONTACT), {
+    const response = await fetch(getApiUrl('/api/contact/'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -160,7 +177,7 @@ const handleSubmit = async () => {
     success.value = true;
     form.value.name = '';
     form.value.phone = '';
-  } catch (e) {
+  } catch (e: unknown) {
     error.value = 'Ошибка при отправке. Попробуйте позже.';
   }
 }

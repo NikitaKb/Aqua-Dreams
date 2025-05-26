@@ -73,12 +73,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, defineProps } from 'vue'
-import { API_CONFIG, getApiUrl } from '~/config/api'
+import { getApiUrl } from '~/config/api'
 
 const pools = ref([]);
 
 onMounted(async () => {
-  const res = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.POOLS));
+  const res = await fetch(getApiUrl('/api/pools/'));
   pools.value = await res.json();
 });
 const props = defineProps({

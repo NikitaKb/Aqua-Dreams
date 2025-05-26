@@ -55,7 +55,7 @@
 
 <script>
 import ConsultationModal from './ConsultationModal.vue';
-import { API_CONFIG, getApiUrl } from '~/config/api';
+import { getApiUrl, API_CONFIG } from '~/config/api';
 
 export default {
   name: 'ProductCard',
@@ -79,7 +79,7 @@ export default {
       
       return this.product.images.map(imgObj => {
         const imageUrl = imgObj.image;
-        return imageUrl.startsWith('http') ? imageUrl : `${API_CONFIG.BASE_URL}${imageUrl}`;
+        return imageUrl.startsWith('http') ? imageUrl : getApiUrl(imageUrl);
       });
     },
     currentImage() {
@@ -125,7 +125,7 @@ export default {
     },
     async fetchCategoryName() {
       try {
-        const res = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.CATALOG));
+        const res = await fetch(getApiUrl('/api/catalog/'));
         if (!res.ok) throw new Error('Ошибка загрузки категорий');
         const data = await res.json();
         const found = data.find(cat => cat.slug === this.categorySlug);
@@ -136,7 +136,7 @@ export default {
     }
   },
   async mounted() {
-    const res = await fetch(getApiUrl(`${API_CONFIG.API_ENDPOINTS.CATALOG}/${this.categorySlug}/${this.productSlug}/`));
+    const res = await fetch(getApiUrl(`/api/catalog/${this.categorySlug}/${this.productSlug}/`));
     this.product = await res.json();
     if (this.product.category_name) {
       this.categoryName = this.product.category_name;

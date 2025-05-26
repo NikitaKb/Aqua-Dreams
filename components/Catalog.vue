@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { API_CONFIG, getApiUrl } from '~/config/api';
+import { getApiUrl } from '~/config/api';
 
 export default {
   name: 'Catalog',
@@ -128,7 +128,7 @@ export default {
     async fetchCategories() {
       this.loading = true;
       try {
-        const res = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.CATALOG));
+        const res = await fetch(getApiUrl('/api/catalog/'));
         if (!res.ok) throw new Error('Ошибка загрузки категорий');
         const data = await res.json();
         this.categories = data;
@@ -146,7 +146,7 @@ export default {
       this.loading = true;
       this.error = null;
       try {
-        let url = getApiUrl(`${API_CONFIG.API_ENDPOINTS.CATALOG}/${this.categoryName}/`);
+        let url = getApiUrl(`/api/catalog/${this.categoryName}/`);
         const params = new URLSearchParams();
 
         if (this.searchQuery) {
@@ -214,10 +214,10 @@ export default {
     getImages(item) {
       const images = [];
       if (item.image) {
-        images.push(item.image.startsWith('http') ? item.image : `${API_CONFIG.BASE_URL}${item.image}`);
+        images.push(item.image.startsWith('http') ? item.image : getApiUrl(item.image));
       }
       if (item.image_second) {
-        images.push(item.image_second.startsWith('http') ? item.image_second : `${API_CONFIG.BASE_URL}${item.image_second}`);
+        images.push(item.image_second.startsWith('http') ? item.image_second : getApiUrl(item.image_second));
       }
       return images;
     },
