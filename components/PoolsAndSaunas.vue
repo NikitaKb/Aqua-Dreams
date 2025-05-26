@@ -13,10 +13,10 @@
           </div>
         </nuxt-link>
         <!-- Проектирование и дизайн -->
-        <nuxt-link to="/design" class="service-card">
-          <img src="/images/design.png" alt="Проектирование и дизайн" class="service-image" />
+        <nuxt-link to="/about" class="service-card">
+          <img src="/public/images/us.png" alt="Проектирование и дизайн" class="service-image" />
           <div class="service-overlay">
-            <h3 class="service-title">Проектирование и дизайн</h3>
+            <h3 class="service-title">О нас</h3>
           </div>
         </nuxt-link>
       </div>
