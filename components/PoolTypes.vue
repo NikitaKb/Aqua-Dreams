@@ -6,7 +6,7 @@
       
       <div class="pool-cards">
         <div class="pool-card" v-for="pool in pools" :key="pool.id">
-          <img :src="`http://127.0.0.1:8000${pool.main_image_url}`" :alt="pool.name" class="pool-image">
+          <img :src="`${API_CONFIG.BASE_URL}${pool.main_image_url}`" :alt="pool.name" class="pool-image">
           <div class="pool-content">
             <h3 class="pool-title">{{ pool.name }}</h3>
             <p class="pool-description">
@@ -25,6 +25,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { API_CONFIG, getApiUrl } from '~/config/api';
 
 const pools = ref([]);
 const isMobile = ref(false);
@@ -34,7 +35,7 @@ function checkMobile() {
 }
 
 onMounted(async () => {
-  const res = await fetch('http://localhost:8000/api/pools/');
+  const res = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.POOLS));
   pools.value = await res.json();
   checkMobile();
   window.addEventListener('resize', checkMobile);

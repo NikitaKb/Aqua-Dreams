@@ -62,6 +62,7 @@ import { computed, ref, reactive, onMounted, watch, onBeforeUnmount } from 'vue'
 import { defineProps } from 'vue';
 import { useRoute } from 'vue-router';
 import ConsultationModal from './ConsultationModal.vue';
+import { API_CONFIG, getApiUrl } from '~/config/api';
 
 interface Advantage {
   title: string;
@@ -95,14 +96,13 @@ const termoData = ref<TermoData>({
 });
 
 const currentIndex = ref(0);
-const BASE_URL = 'http://localhost:8000';
 
 const currentImage = computed(() => {
   const images = termoData.value.images || [];
   if (images.length === 0) return '/images/termo-b.png';
   const imgObj = images[currentIndex.value];
   if (!imgObj || !imgObj.image_url) return '/images/termo-b.png';
-  return imgObj.image_url.startsWith('http') ? imgObj.image_url : BASE_URL + imgObj.image_url;
+  return imgObj.image_url.startsWith('http') ? imgObj.image_url : API_CONFIG.BASE_URL + imgObj.image_url;
 });
 
 const leftAdvantages = computed(() => {
@@ -186,7 +186,7 @@ watch(() => route.params.type, (newType) => {
 async function fetchTermoData(type: string) {
   try {
     console.log('Fetching termo data for type:', type);
-    const response = await fetch(`http://localhost:8000/api/terms/${type}/`);
+    const response = await fetch(getApiUrl(`${API_CONFIG.API_ENDPOINTS.TERMS}/${type}/`));
     if (!response.ok) {
       throw new Error(`Failed to fetch termo data: ${response.status} ${response.statusText}`);
     }

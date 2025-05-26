@@ -63,6 +63,7 @@ import { computed, ref, reactive, onMounted, watch, onBeforeUnmount } from 'vue'
 import { defineProps } from 'vue';
 import { useRoute } from 'vue-router';
 import ConsultationModal from './ConsultationModal.vue';
+import { API_CONFIG, getApiUrl } from '~/config/api';
 
 interface Advantage {
   title: string;
@@ -96,14 +97,13 @@ const poolData = ref<PoolData>({
 });
 
 const currentIndex = ref(0);
-const BASE_URL = 'http://localhost:8000';
 
 const currentImage = computed(() => {
   const images = poolData.value.images || [];
   if (images.length === 0) return '/images/b-pools.png';
   const imgObj = images[currentIndex.value];
   if (!imgObj || !imgObj.image_url) return '/images/b-pools.png';
-  return imgObj.image_url.startsWith('http') ? imgObj.image_url : BASE_URL + imgObj.image_url;
+  return imgObj.image_url.startsWith('http') ? imgObj.image_url : API_CONFIG.BASE_URL + imgObj.image_url;
 });
 
 const leftAdvantages = computed(() => {
@@ -187,7 +187,7 @@ watch(() => route.params.type, (newType) => {
 async function fetchPoolData(type: string) {
   try {
     console.log('Fetching pool data for type:', type);
-    const response = await fetch(`http://127.0.0.1:8000/api/pools/${type}/`);
+    const response = await fetch(getApiUrl(`${API_CONFIG.API_ENDPOINTS.POOLS}/${type}/`));
     if (!response.ok) {
       throw new Error(`Failed to fetch pool data: ${response.status} ${response.statusText}`);
     }

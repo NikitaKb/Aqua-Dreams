@@ -23,6 +23,8 @@
 
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
+import { API_CONFIG, getApiUrl } from '~/config/api';
+
 const props = defineProps<{
   show: boolean,
   onClose: () => void,
@@ -87,7 +89,7 @@ async function submitConsultation() {
     name: props.name,
   };
   try {
-    const response = await fetch('http://localhost:8000/api/contact/', {
+    const response = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.CONTACT), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

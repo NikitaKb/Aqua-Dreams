@@ -61,6 +61,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { API_CONFIG, getApiUrl } from '~/config/api';
 
 const form = ref({
   name: '',
@@ -143,7 +144,7 @@ const handleSubmit = async () => {
   }
 
   try {
-    const response = await fetch('http://localhost:8000/api/contact/', {
+    const response = await fetch(getApiUrl(API_CONFIG.API_ENDPOINTS.CONTACT), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
