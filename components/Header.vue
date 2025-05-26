@@ -147,6 +147,7 @@ onUnmounted(() => {
   width: 100%;
   z-index: 100;
   padding: 20px 0;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   background: transparent;
 }
@@ -176,8 +177,13 @@ onUnmounted(() => {
 }
 
 .header-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
@@ -188,14 +194,19 @@ onUnmounted(() => {
 .logo-image {
   height: 60px;
   width: auto;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
 
 .nav {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
 .nav-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   justify-content: space-around;
   list-style: none;
@@ -211,6 +222,7 @@ onUnmounted(() => {
   font-size: 16px;
   text-decoration: none;
   color: #fff;
+  -webkit-transition: color 0.3s ease;
   transition: color 0.3s ease;
   text-transform: uppercase;
   font-weight: 500;
@@ -227,12 +239,15 @@ onUnmounted(() => {
   position: absolute;
   top: 100%;
   left: 50%;
+  -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(10px);
+  -webkit-border-radius: 8px;
   border-radius: 8px;
   padding: 15px 0;
   min-width: 250px;
+  -webkit-box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
@@ -247,6 +262,7 @@ onUnmounted(() => {
   color: #fff;
   text-decoration: none;
   font-size: 14px;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   text-transform: none;
   font-weight: 400;
@@ -259,14 +275,17 @@ onUnmounted(() => {
 
 .dropdown-enter-active,
 .dropdown-leave-active {
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   opacity: 1;
+  -webkit-transform: translateY(0) translateX(-50%);
   transform: translateY(0) translateX(-50%);
 }
 
 .dropdown-enter-from,
 .dropdown-leave-to {
   opacity: 0;
+  -webkit-transform: translateY(-10px) translateX(-50%);
   transform: translateY(-10px) translateX(-50%);
 }
 
@@ -288,7 +307,9 @@ onUnmounted(() => {
   height: 1px;
   background: #fff;
   position: absolute;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
+  -webkit-border-radius: 1px;
   border-radius: 1px;
 }
 
@@ -310,6 +331,7 @@ onUnmounted(() => {
 }
 
 .burger-menu.active span:nth-child(1) {
+  -webkit-transform: translateY(9px) rotate(45deg);
   transform: translateY(9px) rotate(45deg);
 }
 
@@ -318,6 +340,7 @@ onUnmounted(() => {
 }
 
 .burger-menu.active span:nth-child(3) {
+  -webkit-transform: translateY(-9px) rotate(-45deg);
   transform: translateY(-9px) rotate(-45deg);
 }
 
@@ -329,9 +352,16 @@ onUnmounted(() => {
   height: 100vh;
   background: rgba(0, 0, 0, 0.9);
   z-index: 1;
+  -webkit-transition: right 0.3s ease;
   transition: right 0.3s ease;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
@@ -343,9 +373,13 @@ onUnmounted(() => {
   list-style: none;
   margin: 0;
   padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
   gap: 40px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -356,6 +390,7 @@ onUnmounted(() => {
   text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 0.02em;
+  -webkit-transition: color 0.3s ease;
   transition: color 0.3s ease;
 }
 
@@ -386,15 +421,7 @@ onUnmounted(() => {
   }
 }
 
-.line {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 100vw;
-  height: 1px;
-  background: #E5E5E5;
-  z-index: 1;
-}
+
 
 /* Анимация подчеркивания для навигации */
 .nav-link::after {
@@ -405,6 +432,7 @@ onUnmounted(() => {
   width: 0;
   height: 2px;
   background: #23A3FF;
+  -webkit-transition: width 0.3s ease;
   transition: width 0.3s ease;
 }
 

@@ -8,7 +8,17 @@
     <h2 class="product-title">{{ product.name }}</h2>
     <div class="product-main">
       <div class="product-slider">
-        <img v-if="currentImage" :src="currentImage" :alt="product.name" class="product-main-img" />
+        <div class="product-img-container"
+          @touchstart="startSwipe"
+          @touchmove="moveSwipe"
+          @touchend="endSwipe"
+          @mousedown="startSwipe"
+          @mousemove="moveSwipe"
+          @mouseup="endSwipe"
+          @mouseleave="endSwipe"
+        >
+          <img v-if="currentImage" :src="currentImage" :alt="product.name" class="product-main-img" />
+        </div>
         <div v-if="images.length > 1" class="product-slider-controls">
           <button @click="prevImage">‹</button>
           <button @click="nextImage">›</button>
@@ -26,11 +36,11 @@
       </div>
     </div>
     <div class="product-block">
-      <h2>Надежность товара </h2>
+      <h3>Надежность товара </h3>
       <p>{{ product.reliability_text }}</p>
     </div>
     <div class="product-block">
-      <h2>Особые отметки</h2>
+      <h3>Особые отметки</h3>
       <p>{{ product.special_notes }}</p>
     </div>
     <ConsultationModal
@@ -56,6 +66,9 @@ export default {
       currentImageIndex: 0,
       categoryName: '',
       showConsultModal: false,
+      swipeStartX: 0,
+      swipeEndX: 0,
+      isSwiping: false
     };
   },
   computed: {
@@ -73,6 +86,36 @@ export default {
     }
   },
   methods: {
+    startSwipe(event) {
+      if (event.type === 'mousedown') {
+        event.preventDefault();
+      }
+      this.isSwiping = true;
+      this.swipeStartX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+      this.swipeEndX = 0;
+    },
+    moveSwipe(event) {
+      if (!this.isSwiping) return;
+      this.swipeEndX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+    },
+    endSwipe() {
+      if (!this.isSwiping) return;
+      this.isSwiping = false;
+
+      const swipeDistance = this.swipeEndX - this.swipeStartX;
+      const minSwipeDistance = 50;
+
+      if (Math.abs(swipeDistance) > minSwipeDistance) {
+        if (swipeDistance < 0) {
+          this.nextImage();
+        } else {
+          this.prevImage();
+        }
+      }
+
+      this.swipeStartX = 0;
+      this.swipeEndX = 0;
+    },
     nextImage() {
       this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
     },
@@ -122,35 +165,65 @@ export default {
   margin-bottom: 24px;
 }
 .product-main {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   gap: 40px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   margin-bottom: 32px;
   width: 100%;
 }
 .product-slider {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 60%;
   flex: 1 1 60%;
   background: #fff;
   border: 1px solid #bbb;
+  -webkit-border-radius: 4px;
   border-radius: 4px;
   padding: 24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   flex-direction: column;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   position: relative;
   width: 100%;
 }
 .product-main-img {
-  width: 500px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.product-img-container {
+  width: 100%;
   height: 300px;
-  object-fit: cover;
-  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  flex-shrink: 0;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.product-img-container:active {
+  cursor: grabbing;
 }
 .product-slider-controls {
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   justify-content: space-between;
   pointer-events: none;
@@ -164,6 +237,7 @@ export default {
   height: 36px;
   cursor: pointer;
   margin: 0 8px;
+  -webkit-transition: background 0.2s, color 0.2s;
   transition: background 0.2s, color 0.2s;
   border: none;
 }
@@ -172,9 +246,13 @@ export default {
   color: #000;
 }
 .product-thumbs {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
   gap: 8px;
   margin-top: 8px;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 .product-thumb {
@@ -182,9 +260,11 @@ export default {
   height: 48px;
   object-fit: contain;
   border: 1px solid #eee;
+  -webkit-border-radius: 4px;
   border-radius: 4px;
   cursor: pointer;
   opacity: 0.7;
+  -webkit-transition: border 0.2s, opacity 0.2s;
   transition: border 0.2s, opacity 0.2s;
 }
 .product-thumb.active, .product-thumb:hover {
@@ -192,8 +272,11 @@ export default {
   opacity: 1;
 }
 .product-info {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 40%;
   flex: 1 1 40%;
   background: #fff;
+  -webkit-border-radius: 4px;
   border-radius: 4px;
   padding: 24px 18px;
  
@@ -211,6 +294,7 @@ export default {
 .consult-btn {
   width: 260px;
   height: 70px;
+  -webkit-border-radius: 15px;
   border-radius: 15px;
   border: 1px solid #23A3FF;
   padding: 35px 94px;
@@ -219,9 +303,16 @@ export default {
   color: #23A3FF;
   font-size: 16px;
   cursor: pointer;
+  -webkit-transition: background 0.2s, color 0.2s;
   transition: background 0.2s, color 0.2s;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 .consult-btn:hover {
@@ -269,6 +360,9 @@ export default {
     height: auto;
     max-height: 300px;
   }
+  .product-slider-controls {
+    display: none;
+  }
 }
 @media (max-width: 480px) {
   .product-section {
@@ -279,7 +373,7 @@ export default {
 @media (max-width: 375px) {
   .product-section {
     max-width: 100vw;
-    padding: 2px 0.5vw;
+    padding: 2px 10px;
   }
 }
 @media (max-width: 900px) {

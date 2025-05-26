@@ -28,7 +28,7 @@
   const certificatesContainer = ref(null);
   const currentIndex = ref(0);
   const itemsPerSlide = ref(4); // Default to showing all 4 certificates
-  const windowWidth = ref(window.innerWidth);
+  const windowWidth = ref(1024); // Initialize with a default value
   const totalItems = 4; // Total number of certificates
 
   // For swipe functionality
@@ -166,6 +166,7 @@
       certificatesContainer.value.addEventListener('touchmove', touchMove);
       certificatesContainer.value.addEventListener('touchend', touchEnd);
     }
+    windowWidth.value = window.innerWidth; // Set actual window width after mount
   });
 
   onUnmounted(() => {
@@ -232,15 +233,9 @@
   }
 
   .certificates img {
-    height: auto;
-    max-width: 100%; /* Ensure image fits within its container */
-    /* Prevent image dragging conflicts */
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
+    width: 267px;
+    height: 370px;
+    object-fit: contain;
   }
 
   .nav-btn {
@@ -373,11 +368,16 @@
     .section-title {
       font-size: 12px;
     }
-    .certificates img {
-      max-width: 80px; /* Adjusted max-width for 1 item on smaller screens */
+    .section-title.blue {
+      font-size: 20px;
     }
-     .certificate-item {
-      flex: 0 0 100%; /* Show 1 item */
+    .certificates img {
+      width: 267px;
+      height: 370px;
+      object-fit: contain;
+    }
+    .certificate-item {
+      flex: 0 0 100%;
     }
   }
  }

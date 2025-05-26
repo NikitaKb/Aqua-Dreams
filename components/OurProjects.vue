@@ -49,15 +49,15 @@
           </svg>
         </button>
       </div>
-      <div class="view-all">
+      <!-- <div class="view-all">
         <button class="button-view-all">Смотреть все проекты</button>
-      </div>
+      </div> -->
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 
 const projects = ref([])
 const isLoading = ref(true)
@@ -65,19 +65,26 @@ const currentSlide = ref(0)
 const itemsPerSlide = ref(2) // Default for larger screens
 const gap = ref(4.5) // 30px gap as percentage of container width (approx)
 
+// Reference to the slider element
+const slider = ref(null);
+
 let intervalId = null;
+
+// For swipe functionality
+let startX = 0;
+let currentTranslate = 0; // Will track the temporary translation during swipe
+let isDragging = false;
+let animationFrameId = null; // For requestAnimationFrame
 
 function updateItemsPerSlide() {
   // Adjust breakpoint as needed. 750px is just an example.
   // This will show 1 item below 750px, and 2 items above.
   if (window.innerWidth < 750) {
     itemsPerSlide.value = 1;
-    // You might also want to adjust the 'gap' value here for mobile
-    // For example: gap.value = 2; // for 16px gap on mobile if using width: calc(100% - gap_in_px)
+    gap.value = 0; // Set gap to 0 for mobile
   } else {
     itemsPerSlide.value = 2;
-    // Reset gap for larger screens if adjusted for mobile
-    // For example: gap.value = 4.5; // for 30px gap on desktop
+    gap.value = 4.5; // Reset gap for larger screens
   }
    // Ensure currentSlide is within valid range after changing itemsPerSlide
   const maxSlide = Math.max(0, projects.value.length - itemsPerSlide.value);
@@ -100,18 +107,121 @@ const fetchProjects = async () => {
   }
 }
 
+// Swipe Handlers
+const touchStart = (event) => {
+  console.log('touchStart', event);
+  // Only enable swipe on screens <= 768px
+  if (window.innerWidth > 768) return;
+
+  isDragging = true;
+  startX = event.touches[0].clientX;
+  // Optional: Disable CSS transition during drag for smoother feel
+  if (slider.value) {
+    slider.value.style.transition = 'none';
+  }
+   // Initialize currentTranslate with the current position for smoother drag
+   if (slider.value) {
+      const transformMatrix = window.getComputedStyle(slider.value).getPropertyValue('transform');
+      if (transformMatrix && transformMatrix !== 'none') {
+         const matrix = transformMatrix.split('(')[1].split(')')[0].split(',');
+         // Get the translateX value (usually the 5th value in the matrix)
+         currentTranslate = parseFloat(matrix[4]);
+      } else {
+         currentTranslate = 0;
+      }
+   }
+};
+
+const touchMove = (event) => {
+  console.log('touchMove', event);
+  if (!isDragging) return;
+  const currentX = event.touches[0].clientX;
+  const moveDistance = startX - currentX; // How much finger has moved
+
+  // Calculate new temporary translate position
+  // This doesn't directly control the slide index yet, just the visual drag
+  // This part might need adjustment based on how the current transform is applied
+  // If transform is based on percentage like `translateX(${-currentSlide * 100}%)`,
+  // we need to calculate the pixel equivalent of the percentage shift.
+  // A simpler approach might be to calculate the new slide index based on the total drag distance
+  // in touchEnd and only update currentSlide there.
+
+  // For simplicity with the current transform logic, let's try updating the style directly during move.
+  // This might conflict with the currentSlide * (100 + gap) transform.
+  // Let's stick to updating slide index in touchEnd based on the total swipe distance.
+
+  // Let's refine touchMove: don't update style here directly, just track total movement from start
+  // This requires storing the initial position before dragging started, not just currentTranslate
+  // Let's simplify and just use the delta to decide next/prev slide in touchEnd.
+};
+
+const touchEnd = () => {
+  console.log('touchEnd');
+  if (!isDragging) return;
+  isDragging = false;
+  // Re-enable CSS transition if it was disabled
+  if (slider.value) {
+     slider.value.style.transition = ''; // Reset to default or previous transition
+  }
+
+  const movedBy = event.changedTouches[0].clientX - startX; // Total horizontal movement
+
+  // Determine swipe direction and trigger slide change
+  // Adjust threshold as needed (e.g., 50 pixels)
+  if (movedBy < -50) { // Swiped left (next)
+    nextSlide();
+  } else if (movedBy > 50) { // Swiped right (prev)
+    prevSlide();
+  }
+  // If swipe wasn't enough, the slider stays at the currentSlide due to Vue's reactivity.
+};
+
 onMounted(() => {
   fetchProjects();
   updateItemsPerSlide(); // Set initial value
-  window.addEventListener('resize', updateItemsPerSlide); // Update on resize
+
+  // Add resize listener
+  window.addEventListener('resize', updateItemsPerSlide);
+
+  // Auto-slide interval for desktop
   intervalId = setInterval(nextSlide, 8000);
+
+  // Add touch listeners for swipe on mobile
+  console.log('onMounted - checking slider.value', slider.value);
+  if (slider.value) {
+    console.log('onMounted - slider.value is available, adding touch listeners');
+    slider.value.addEventListener('touchstart', touchStart);
+    // We need touchmove and touchend listeners on the document or a higher element
+    // to handle cases where the touch moves outside the slider element.
+    // However, for simplicity and to avoid potential conflicts, let's keep it on the slider for now.
+    // If drag doesn't work well, we might need to move these listeners.
+    slider.value.addEventListener('touchmove', touchMove);
+    slider.value.addEventListener('touchend', touchEnd);
+  }
 });
 
 onUnmounted(() => {
   if (intervalId) {
     clearInterval(intervalId);
   }
-  window.removeEventListener('resize', updateItemsPerSlide); // Clean up listener
+  window.removeEventListener('resize', updateItemsPerSlide); // Clean up resize listener
+
+  // Remove touch listeners
+  if (slider.value) {
+    slider.value.removeEventListener('touchstart', touchStart);
+    slider.value.removeEventListener('touchmove', touchMove);
+    slider.value.removeEventListener('touchend', touchEnd);
+  }
+});
+
+// Watch for slider ref to be available
+watch(slider, (newValue) => {
+  if (newValue) {
+    console.log('slider ref is available, adding touch listeners');
+    newValue.addEventListener('touchstart', touchStart);
+    newValue.addEventListener('touchmove', touchMove);
+    newValue.addEventListener('touchend', touchEnd);
+  }
 });
 
 const visibleProjects = computed(() => {
@@ -363,6 +473,20 @@ const prevSlide = () => {
   height: 22px;
 }
 
+@media (max-width: 768px) {
+  .nav-button {
+    display: none;
+  }
+
+  /* Ensure touch interaction is possible */
+   .projects-slider {
+      cursor: grab; /* Indicate draggable area */
+   }
+    .projects-slider.dragging {
+      cursor: grabbing;
+   }
+}
+
 .view-all {
   text-align: center;
 }
@@ -399,29 +523,34 @@ const prevSlide = () => {
   }
 }
 
-@media (max-width: 749px) {
+@media (max-width: 750px) {
   .section-title {
     font-size: 36px;
   }
 
   .project-card {
-    min-width: 100%; /* Card takes full width on smaller screens */
+    min-width: 100%;
     height: 400px;
     width: 100%;
   }
 
   .slider-container {
-    margin: 0 -16px;
+    margin: 0;
     margin-bottom: 30px;
   }
 
   .projects-slider {
-    gap: 16px; /* Adjust gap for mobile */
+    gap: 0;
   }
 
   .project-card {
-    min-width: calc(100% - 32px); /* Adjust min-width considering padding/margin */
-    margin: 0 16px; /* Add margin to show parts of adjacent slides */
+    min-width: 100%;
+    margin: 0;
+  }
+
+  .projects-slider,
+  .project-card {
+    transition: none !important;
   }
 }
 
@@ -452,8 +581,8 @@ const prevSlide = () => {
   }
 
   .info-button img {
-    width: 16px;
-    height: 16px;
+    width: 25px;
+    height: 25px;
   }
 
   .project-info h3 {

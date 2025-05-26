@@ -117,7 +117,6 @@ body {
   max-width: var(--container-max-width);
   margin: 0 auto;
   width: 100%;
-  padding: 0 calc(var(--container-padding) * var(--scale-factor));
   position: relative;
 }
 
@@ -160,7 +159,7 @@ h2 {
 }
 
 h3 {
-  font-size: calc(2.5rem * var(--scale-factor));
+  font-size: calc(2rem * var(--scale-factor));
   font-weight: 500;
   line-height: 1.2;
   transform-origin: center;

@@ -123,9 +123,11 @@
   color: #23A3FF;
   border: 1px solid #23A3FF;
   padding: 16px 40px;
+  -webkit-border-radius: 100px;
   border-radius: 100px;
   font-size: 16px;
   cursor: pointer;
+  -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
   font-weight: 500;
   text-decoration: none;
@@ -176,6 +178,7 @@
   .bath-image {
     position: relative;
     height: 500px;
+    -webkit-border-radius: 20px;
     border-radius: 20px;
   }
   
@@ -210,6 +213,7 @@
   
   .bath-image {
     height: 400px;
+    -webkit-border-radius: 10px;
     border-radius: 10px;
   }
   
@@ -265,10 +269,12 @@
     width: 100%;
     max-width: 100%;
     height: 220px;
+    -webkit-border-radius: 12px;
     border-radius: 12px;
     margin-bottom: 12px;
   }
   .bath-image img {
+    -webkit-border-radius: 12px;
     border-radius: 12px;
   }
   .button-wrapper {

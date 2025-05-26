@@ -30,10 +30,36 @@
     </div>
     <div class="catalog-grid">
       <div v-for="item in items" :key="item.id" class="catalog-card">
-        <div class="catalog-card-img-wrap">
-          <img :src="getCurrentImage(item)" alt="" class="catalog-card-img" />
+        <div class="catalog-card-img-wrap"
+          @mousedown="startSwipe($event, item.id)"
+          @mousemove="moveSwipe($event, item.id)"
+          @mouseup="endSwipe($event, item.id)"
+          @mouseleave="endSwipe($event, item.id)"
+          @touchstart="startSwipe($event, item.id)"
+          @touchmove="moveSwipe($event, item.id)"
+          @touchend="endSwipe($event, item.id)"
+          @mouseover="startHover(item.id)"
+          @mouseout="endHover(item.id)"
+        >
+          <div class="catalog-slider">
+            <img 
+              :src="getCurrentImage(item)"
+              :alt="item.name"
+              class="catalog-card-img"
+            />
+          </div>
         </div>
-        <div class="catalog-card-divider"></div>
+        <div class="catalog-card-divider">
+          <div class="slider-indicators">
+            <span 
+              :class="['indicator-line', { active: sliderIndexes[item.id] === 0 || !sliderIndexes[item.id] }]"
+            ></span>
+            <span 
+              v-if="getImages(item).length > 1"
+              :class="['indicator-line', { active: sliderIndexes[item.id] === 1 }]"
+            ></span>
+          </div>
+        </div>
         <div class="catalog-card-name">{{ item.name }}</div>
         <router-link
           :to="`/catalog/${categoryName}/${item.slug}`"
@@ -65,11 +91,25 @@ export default {
       sliderIndexes: {},
       searchQuery: '',
       searchTimeout: null,
-      sortOrder: ''
+      sortOrder: '',
+      swipeStartX: 0,
+      swipeEndX: 0,
+      isSwiping: false,
+      currentSwipingItemId: null,
+      windowWidth: typeof window !== 'undefined' ? window.innerWidth : 0,
+      hoverTimers: {},
     };
   },
   mounted() {
     this.fetchCategories();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', this.updateWindowWidth);
+    }
+  },
+  beforeDestroy() {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.updateWindowWidth);
+    }
   },
   watch: {
     categorySlug: {
@@ -137,6 +177,15 @@ export default {
         if (!res.ok) throw new Error('Ошибка загрузки категории');
         const data = await res.json();
         this.items = data.products;
+
+        // Initialize sliderIndexes for each item
+        this.sliderIndexes = {};
+        this.items.forEach(item => {
+          if (this.getImages(item).length > 1) {
+            this.sliderIndexes[item.id] = 0;
+          }
+        });
+
       } catch (e) {
         this.error = e.message;
       } finally {
@@ -144,7 +193,6 @@ export default {
       }
     },
     handleSearch() {
-      // Добавляем задержку для предотвращения частых запросов
       if (this.searchTimeout) {
         clearTimeout(this.searchTimeout);
       }
@@ -158,19 +206,113 @@ export default {
     selectCategory(slug) {
       this.categoryName = slug;
       this.searchQuery = '';
-      this.sortOrder = ''; // Сбрасываем сортировку при смене категории
+      this.sortOrder = '';
       this.fetchCategory();
     },
     getImages(item) {
       const BASE_URL = 'http://localhost:8000';
-      return [item.image, item.image_second]
-        .filter(Boolean)
-        .map(img => img.startsWith('http') ? img : `${BASE_URL}${img}`);
+      const images = [];
+      if (item.image) {
+        images.push(item.image.startsWith('http') ? item.image : `${BASE_URL}${item.image}`);
+      }
+      if (item.image_second) {
+        images.push(item.image_second.startsWith('http') ? item.image_second : `${BASE_URL}${item.image_second}`);
+      }
+      return images;
     },
     getCurrentImage(item) {
       const images = this.getImages(item);
-      const idx = this.sliderIndexes[item.id] || 0;
-      return images[idx] || images[0] || '';
+      const currentIndex = this.sliderIndexes[item.id] || 0;
+      return images[currentIndex] || images[0] || '';
+    },
+    nextImage(itemId) {
+      const images = this.getImages(this.items.find(item => item.id === itemId));
+      if (images.length <= 1) return;
+      const currentIndex = this.sliderIndexes[itemId] || 0;
+      const nextIndex = (currentIndex + 1) % images.length;
+      this.sliderIndexes[itemId] = nextIndex;
+    },
+    prevImage(itemId) {
+      const images = this.getImages(this.items.find(item => item.id === itemId));
+      if (images.length <= 1) return;
+      const currentIndex = this.sliderIndexes[itemId] || 0;
+      const prevIndex = (currentIndex - 1 + images.length) % images.length;
+      this.sliderIndexes[itemId] = prevIndex;
+    },
+    startSwipe(event, itemId) {
+      if (this.windowWidth > 1024) return;
+      if (this.hoverTimers[itemId]) {
+        clearTimeout(this.hoverTimers[itemId]);
+        delete this.hoverTimers[itemId];
+      }
+      if (event.type === 'mousedown') {
+        event.preventDefault();
+      }
+      this.isSwiping = true;
+      this.currentSwipingItemId = itemId;
+      this.swipeStartX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+      this.swipeEndX = 0;
+    },
+    moveSwipe(event, itemId) {
+      if (!this.isSwiping || this.currentSwipingItemId !== itemId) return;
+      this.swipeEndX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+    },
+    endSwipe(event, itemId) {
+      if (this.windowWidth > 1024) return;
+      if (!this.isSwiping || this.currentSwipingItemId !== itemId) return;
+      this.isSwiping = false;
+
+      const swipeDistance = this.swipeEndX - this.swipeStartX;
+      const minSwipeDistance = 30;
+
+      if (this.hoverTimers[itemId]) {
+        clearTimeout(this.hoverTimers[itemId]);
+        delete this.hoverTimers[itemId];
+      }
+
+      if (Math.abs(swipeDistance) > minSwipeDistance) {
+        if (swipeDistance < 0) {
+          this.nextImage(itemId);
+        } else {
+          this.prevImage(itemId);
+        }
+      } else {
+        this.sliderIndexes[itemId] = 0;
+      }
+
+      this.swipeStartX = 0;
+      this.swipeEndX = 0;
+      this.currentSwipingItemId = null;
+    },
+    startHover(itemId) {
+      if (this.windowWidth <= 1024) return;
+      const item = this.items.find(item => item.id === itemId);
+      if (!item || this.getImages(item).length <= 1 || this.isSwiping) return;
+      
+      if (this.hoverTimers[itemId]) {
+        clearTimeout(this.hoverTimers[itemId]);
+      }
+
+      this.hoverTimers[itemId] = setTimeout(() => {
+        if (!this.isSwiping && this.currentSwipingItemId !== itemId) {
+          this.sliderIndexes[itemId] = 1;
+        }
+        delete this.hoverTimers[itemId];
+      }, 300);
+    },
+    endHover(itemId) {
+      if (this.hoverTimers[itemId]) {
+        clearTimeout(this.hoverTimers[itemId]);
+        delete this.hoverTimers[itemId];
+      }
+
+      if (this.currentSwipingItemId === itemId && this.isSwiping) return;
+      const item = this.items.find(item => item.id === itemId);
+      if (!item || this.getImages(item).length <= 1) return;
+      this.sliderIndexes[itemId] = 0;
+    },
+    updateWindowWidth() {
+      this.windowWidth = window.innerWidth;
     },
   },
 };
@@ -203,7 +345,6 @@ export default {
 .catalog-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -212,7 +353,6 @@ export default {
   height: 480px;
   background: #fff;
   border: 1px solid #E5E5E5;
-  border-radius: 8px;
   padding: 24px 16px 24px 16px;
   display: flex;
   flex-direction: column;
@@ -220,25 +360,45 @@ export default {
   box-sizing: border-box;
   min-width: 0;
   min-height: 0;
+  flex-shrink: 0;
 }
 .catalog-card-img-wrap {
   width: 100%;
   height: 180px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.catalog-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 .catalog-card-img {
   max-width: 100%;
-  max-height: 180px;
+  max-height: 100%;
   object-fit: contain;
+  transition: opacity 1s ease;
 }
 .catalog-card-divider {
   width: 100%;
   height: 1px;
   background: #E5E5E5;
   margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
 }
 .catalog-card-name {
   font-size: 16px;
@@ -275,7 +435,6 @@ export default {
 @media (max-width: 1200px) {
   .catalog-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
   }
   .catalog-card {
     width: 300px;
@@ -292,7 +451,6 @@ export default {
 @media (max-width: 900px) {
   .catalog-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
   }
   .catalog-card {
     width: 100%;
@@ -303,13 +461,12 @@ export default {
     height: 110px;
   }
   .catalog-card-img {
-    max-height: 110px;
+    
   }
 }
 @media (max-width: 600px) {
   .catalog-grid {
     grid-template-columns: 1fr;
-    gap: 12px;
   }
   .catalog-card {
     width: 100%;
@@ -321,10 +478,10 @@ export default {
     height: 90px;
   }
   .catalog-card-img {
-    max-height: 90px;
+   
   }
 }
-@media (max-width: 375px) {
+@media (max-width: 480px) {
   .catalog-section {
     padding: 16px 2px;
   }
@@ -337,14 +494,14 @@ export default {
     min-width: 0;
     width: 100%;
     height: auto;
-    min-height: 180px;
+   
     padding: 8px 2px 8px 2px;
   }
   .catalog-card-img-wrap {
     height: 60px;
   }
   .catalog-card-img {
-    max-height: 60px;
+    
   }
   .catalog-card-btn {
     width: 100%;
@@ -352,6 +509,84 @@ export default {
     padding: 8px 0;
   }
 }
+
+@media (max-width: 430px) {
+  .catalog-section {
+    padding: 16px 2px;
+  }
+  .catalog-menu {
+    gap: 12px;
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+  .catalog-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .catalog-card {
+    min-width: 0;
+    width: 355px;
+    height: 374px;
+    padding: 8px 2px 8px 2px;
+  }
+  .catalog-card-img-wrap {
+    width: 307px;
+    height: 190px;
+    margin-bottom: 8px;
+  }
+  .catalog-slider {
+    width: 307px;
+    height: 190px;
+  }
+  .catalog-card-img {
+    width: 307px;
+    height: 190px;
+    object-fit: contain;
+  }
+  .catalog-card-btn {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 0;
+  }
+}
+
+@media (max-width: 375px) {
+  .catalog-section {
+    padding: 16px 2px;
+  }
+  .catalog-menu {
+    gap: 12px;
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+  .catalog-card {
+    min-width: 0;
+    width: 355px;
+    height: 374px;
+    padding: 8px 2px 8px 2px;
+  }
+  .catalog-card-img-wrap {
+    width: 307px;
+    height: 190px;
+    margin-bottom: 8px;
+  }
+  .catalog-slider {
+    width: 307px;
+    height: 190px;
+  }
+  .catalog-card-img {
+    width: 307px;
+    height: 190px;
+    object-fit: contain;
+  }
+  .catalog-card-btn {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 0;
+  }
+}
+
 .filters-container {
   display: flex;
   gap: 20px;
@@ -459,5 +694,27 @@ export default {
     width: 16px;
     height: 16px;
   }
+}
+
+.slider-indicators {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.indicator-line {
+  width: calc(50% - 4px);
+  height: 1px;
+  background-color: #E5E5E5;
+  border-radius: 0;
+  transition: background-color 0.3s ease;
+}
+
+.indicator-line.active {
+  background-color: #23A3FF;
 }
 </style> 

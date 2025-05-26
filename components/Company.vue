@@ -39,7 +39,7 @@
   const logosContainer = ref(null);
   const currentIndex = ref(0);
   const itemsPerSlide = ref(7);
-  const windowWidth = ref(1024); // Default value
+  const windowWidth = ref(1024); // Initialize with a default value
 
   // For swipe functionality
   let startX = 0;
@@ -54,19 +54,21 @@
 
   const updateItemsPerSlide = () => {
     const width = windowWidth.value;
+    console.log('updateItemsPerSlide - windowWidth:', width);
     if (width > 1024) {
       itemsPerSlide.value = 7; // Show all 7 items on screens wider than 1024px
     } else if (width <= 375) {
-      itemsPerSlide.value = 1;
-    } else if (width <= 480) {
-      itemsPerSlide.value = 2;
-    } else if (width <= 768) {
       itemsPerSlide.value = 3;
+    } else if (width <= 480) {
+      itemsPerSlide.value = 3;
+    } else if (width <= 768) {
+      itemsPerSlide.value = 4;
     } else if (width <= 900) {
       itemsPerSlide.value = 4;
     } else if (width <= 1024) {
       itemsPerSlide.value = 5;
     }
+    console.log('updateItemsPerSlide - itemsPerSlide:', itemsPerSlide.value);
   };
 
   const showAllLogos = computed(() => itemsPerSlide.value === 7);
@@ -92,6 +94,7 @@
   };
 
   const updateCarousel = () => {
+    console.log('updateCarousel - itemsPerSlide:', itemsPerSlide.value);
     if (logosContainer.value && !showAllLogos.value) {
       const itemWidth = logosContainer.value.querySelector('.logo-item').offsetWidth;
       const offset = -currentIndex.value * itemWidth;
@@ -165,7 +168,6 @@
   };
 
   onMounted(() => {
-    windowWidth.value = window.innerWidth; // Set actual window width after mount
     updateWindowWidth();
     updateItemsPerSlide();
     updateCarousel(); // Initial carousel position
@@ -316,6 +318,14 @@
     .nav-btn {
       display: none;
     }
+    .logo-item {
+      flex: 0 0 calc(100% / 4);
+    }
+    .partners-logos img {
+      width: 175px;
+      height: 51px;
+      object-fit: contain;
+    }
   }
   
   .nav-btn:hover {
@@ -330,6 +340,23 @@
     right: 10px;
   }
   
+  @media (max-width: 1024px) {
+    .partners-title {
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    .partners-logos {
+      gap: 30px;
+    }
+    .partners-logos img {
+      max-height: 50px;
+      max-width: 130px;
+    }
+    .logo-item {
+      flex: 0 0 calc(100% / 5);
+    }
+  }
+
   @media (max-width: 900px) {
     .partners-title {
       font-size: 28px;
@@ -341,17 +368,9 @@
       max-width: 100px;
       max-height: 40px;
     }
-    /* .nav-btn { opacity: 1; } */
     .logo-item {
       flex: 0 0 calc(100% / 4);
     }
-  }
-
-  @media (max-width: 768px) {
-    .logo-item {
-      flex: 0 0 calc(100% / 3);
-    }
-     /* The display: none for nav-btn is handled above */
   }
 
   @media (max-width: 480px) {
@@ -379,33 +398,40 @@
     }
   }
 
-  @media (max-width: 375px) {
-    .partners-title {
-      font-size: 14px;
-    }
-    .partners-logos img {
-      max-width: 50px;
-      max-height: 20px;
-    }
+  @media (max-width: 430px) {
     .logo-item {
-      flex: 0 0 100%;
+      flex: 0 0 calc(100% / 3);
+    }
+    .logo-item img {
+      width: 90px;
+      height: 25px;
+      object-fit: contain;
+    }
+    .partners-logos {
+      gap: 0;
+    }
+    .partners-title {
+      font-size: 20px;
     }
   }
 
-  @media (max-width: 1024px) {
+  @media (max-width: 375px) {
     .partners-title {
-      font-size: 36px;
-      margin-bottom: 40px;
-    }
-    .partners-logos {
-      gap: 30px;
+      font-size: 20px;
     }
     .partners-logos img {
-      max-height: 50px;
-      max-width: 130px;
+      width: 90px;
+      height: 25px;
+      object-fit: contain;
     }
     .logo-item {
-      flex: 0 0 calc(100% / 5);
+      flex: 0 0 calc(100% / 3);
+    }
+    .logo-item img {
+      object-fit: contain;
+    }
+    .partners-logos {
+      gap: 0;
     }
   }
   </style>

@@ -29,12 +29,12 @@
               </div>
             </div>
   
-            <p class="note">Каждый объект строится в соответствии с ГОСТ №4335 и СНиП №53543</p>
+            <!-- <p class="note">Каждый объект строится в соответствии с ГОСТ №4335 и СНиП №53543</p>
   
             <div class="buttons">
               <button class="btn">ГОСТ</button>
               <button class="btn">СНиП</button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
   .stats {
     display: flex;
     align-items: flex-start;
-    gap: 30px;
+    gap: 20px;
     margin-bottom: 25px;
   }
   
@@ -147,6 +147,13 @@
     background-color: #e6f4ff;
   }
   
+  @media (max-width: 1024px) {
+    .container{
+      margin: 0 auto;
+      gap: 20px;
+    }
+  }
+  
   @media (max-width: 900px) {
     .container {
       flex-direction: column;
@@ -189,10 +196,10 @@
       padding: 24px 4px;
     }
     .number-25 {
-      font-size: 90px;
+      font-size: 250px;
     }
     .heading {
-      font-size: 18px;
+      font-size: 32px;
     }
     .big-number {
       font-size: 22px;
@@ -206,10 +213,10 @@
       padding: 12px 2px;
     }
     .number-25 {
-      font-size: 60px;
+      font-size: 250px;
     }
     .heading {
-      font-size: 14px;
+      font-size: 32px;
     }
     .big-number {
       font-size: 16px;
