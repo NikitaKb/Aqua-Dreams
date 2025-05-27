@@ -6,7 +6,7 @@
       
       <div class="pool-cards">
         <div class="pool-card" v-for="pool in pools" :key="pool.id">
-          <img :src="getApiUrl(pool.main_image_url)" :alt="pool.name" class="pool-image">
+          <img :src="pool.main_image_url" :alt="pool.name" class="pool-image">
           <div class="pool-content">
             <h3 class="pool-title">{{ pool.name }}</h3>
             <p class="pool-description">

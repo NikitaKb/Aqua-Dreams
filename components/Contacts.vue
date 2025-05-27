@@ -88,32 +88,61 @@ const success = ref<boolean>(false);
 const mapContainer = ref<HTMLElement | null>(null);
 
 const validatePhone = (phone: string): boolean => {
-  const phoneRegex = /^\(\d{3}\) \d{3}-\d{2}-\d{2}$/;
+  const phoneRegex = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/;
   return phoneRegex.test(phone);
 };
 
 const formatPhone = (value: string): string => {
-  let formattedValue = value.replace(/\D/g, '');
-  
-  if (formattedValue.length > 0) {
-    if (formattedValue.length <= 3) {
-      formattedValue = `(${formattedValue}`;
-    } else if (formattedValue.length <= 6) {
-      formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3)}`;
-    } else if (formattedValue.length <= 8) {
-      formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3, 6)}-${formattedValue.slice(6)}`;
-    } else {
-      formattedValue = `(${formattedValue.slice(0, 3)}) ${formattedValue.slice(3, 6)}-${formattedValue.slice(6, 8)}-${formattedValue.slice(8, 10)}`;
-    }
+  let digits = value.replace(/\D/g, '');
+
+  // Remove starting 7 if present, since +7 is fixed prefix
+  if (digits.startsWith('7')) {
+    digits = digits.slice(1);
+  } else if (digits.startsWith('8')) {
+    // Allow starting with 8 as well (sometimes Russians enter 8)
+    digits = digits.slice(1);
+  }
+
+  if (digits.length > 10) {
+    digits = digits.slice(0, 10);
+  }
+
+  let formattedValue = '+7 ';
+
+  if (digits.length > 0) {
+    formattedValue += '(' + digits.slice(0, 3);
+  }
+  if (digits.length >= 4) {
+    formattedValue += ') ' + digits.slice(3, 6);
+  }
+  if (digits.length >= 7) {
+    formattedValue += '-' + digits.slice(6, 8);
+  }
+  if (digits.length >= 9) {
+    formattedValue += '-' + digits.slice(8, 10);
   }
   
   return formattedValue;
 };
 
-const onPhoneInput = (event: Event): void => {
+const onPhoneInput = (event: Event) => {
   const input = event.target as HTMLInputElement;
-  const digits = input.value.replace(/\D/g, '');
-  input.value = formatPhone(digits);
+  const rawValue = input.value;
+
+  // Удаляем всё кроме цифр
+  let digits = rawValue.replace(/\D/g, '');
+
+  // Убираем ведущие 7 или 8, если есть
+  if (digits.startsWith('7')) digits = digits.slice(1);
+  if (digits.startsWith('8')) digits = digits.slice(1);
+
+  // Ограничиваем до 10 цифр
+  if (digits.length > 10) digits = digits.slice(0, 10);
+
+  const formatted = formatPhone(digits);
+
+  form.value.phone = formatted;
+  input.value = formatted;
 };
 
 const initMap = () => {
@@ -166,7 +195,7 @@ const handleSubmit = async (): Promise<void> => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         fullName: form.value.name,
-        phone: '+' + form.value.phone,
+        phone: form.value.phone,
       }),
     });
     if (!response.ok) {
