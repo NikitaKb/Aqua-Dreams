@@ -33,10 +33,10 @@
         
         <div class="footer-right">
           <div class="social-links">
-            <a href="#" class="social-link">
-              <img src="/images/telegram.svg" alt="Telegram" class="social-icon">
+            <a href="https://t.me/aquadreamsrostov" class="social-link">
+              <img src="/images/telegram.svg" alt="Telegram" class="social-icon social-icon-telegram">
             </a>
-            <a href="#" class="social-link">
+            <a href="https://wa.me/79897089625" class="social-link">
               <img src="/images/whatsapp.svg" alt="WhatsApp" class="social-icon">
             </a>
             <a href="#" class="social-link">
@@ -150,6 +150,7 @@
 .social-icon {
   width: 40px;
   height: 40px;
+  object-fit: contain;
   transition: opacity 0.3s ease;
 }
 
@@ -191,4 +192,9 @@
     gap: 15px;
   }
 }
+
+.social-icon-telegram {
+  transform: scale(1.12);
+}
+
 </style> 

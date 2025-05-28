@@ -1,6 +1,6 @@
 <template>
   <section class="product-section" v-if="product">
-    <div class="breadcrumbs">
+    <div class="breadcrumbs product-breadcrumbs">
       <router-link to="/products">Товары</router-link> &gt;
       <router-link :to="`/catalog/${categorySlug}`">{{ categoryName }}</router-link> &gt;
       {{ product.name }}
@@ -36,12 +36,12 @@
       </div>
     </div>
     <div class="product-block">
-      <h3>Надежность товара </h3>
-      <p>{{ product.reliability_text }}</p>
+      <h3 class="product-section-title">Надежность товара </h3>
+      <p class="product-section-text">{{ product.reliability_text }}</p>
     </div>
     <div class="product-block">
-      <h3>Особые отметки</h3>
-      <p>{{ product.special_notes }}</p>
+      <h3 class="product-section-title">Особые отметки</h3>
+      <p class="product-section-text">{{ product.special_notes }}</p>
     </div>
     <ConsultationModal
       :show="showConsultModal"
@@ -161,8 +161,8 @@ export default {
   margin-bottom: 18px;
 }
 .product-title {
-  font-size: 32px;
-  font-weight: 600;
+  font-size: 45px;
+  font-weight: 500;
   margin-bottom: 24px;
 }
 .product-main {
@@ -198,7 +198,8 @@ export default {
 .product-main-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  display: block;
   flex-shrink: 0;
 }
 .product-img-container {
@@ -331,6 +332,20 @@ export default {
   font-size: 16px;
   color: #222;
 }
+.product-breadcrumbs {
+  font-size: 22px;
+  color: #888;
+  margin-bottom: 18px;
+}
+.product-section-title {
+  font-size: 36px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.product-section-text {
+  font-size: 18px;
+  color: #222;
+}
 @media (max-width: 1440px) {
   .product-section {
     max-width: 1160px;
@@ -340,6 +355,10 @@ export default {
     width: 450px;
     height: 270px;
   }
+  .product-title { font-size: 40px; }
+  .product-breadcrumbs { font-size: 20px; }
+  .product-section-title { font-size: 32px; }
+  .product-section-text { font-size: 16px; }
 }
 @media (max-width: 1024px) {
   .product-section {
@@ -350,6 +369,10 @@ export default {
     width: 400px;
     height: 240px;
   }
+  .product-title { font-size: 35px; }
+  .product-breadcrumbs { font-size: 20px; }
+  .product-section-title { font-size: 28px; }
+  .product-section-text { font-size: 14px; }
 }
 @media (max-width: 768px) {
   .product-section {
@@ -364,6 +387,10 @@ export default {
   .product-slider-controls {
     display: none;
   }
+  .product-title { font-size: 28px; }
+  .product-breadcrumbs { font-size: 18px; }
+  .product-section-title { font-size: 25px; }
+  .product-section-text { font-size: 16px; }
 }
 @media (max-width: 480px) {
   .product-section {
@@ -405,5 +432,11 @@ export default {
   .product-block p {
     font-size: 13px;
   }
+}
+@media (max-width: 430px) {
+  .product-title { font-size: 20px; }
+  .product-breadcrumbs { font-size: 14px; }
+  .product-section-title { font-size: 18px; }
+  .product-section-text { font-size: 14px; }
 }
 </style> 

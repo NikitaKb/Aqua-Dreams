@@ -214,8 +214,8 @@ const handleSubmit = async (): Promise<void> => {
 
 <style scoped>
 .contacts {
- margin-top: 100px;
-  background: #fff;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .container {

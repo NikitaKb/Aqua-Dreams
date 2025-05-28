@@ -4,18 +4,21 @@
     <div class="carousel-wrapper">
       <button class="nav-btn prev" @click="prevSlide" v-show="!showAllCertificates && windowWidth > 768">&lt;</button>
       <div class="certificates" ref="certificatesContainer">
-        <div class="certificate-item">
-          <img src="/public/images/sertifikat.png" alt="Сертификат 1" />
-        </div>
-        <div class="certificate-item">
-          <img src="/public/images/sertifikat.png" alt="Сертификат 2" />
-        </div>
-        <div class="certificate-item">
-          <img src="/public/images/sertifikat.png" alt="Сертификат 3" />
-        </div>
-        <div class="certificate-item">
-          <img src="/public/images/sertifikat.png" alt="Сертификат 4" />
-        </div>
+        <template v-if="itemsPerSlide === 1">
+          <div class="certificate-item">
+            <img src="/public/images/sertifikat.png" alt="Сертификат {{ currentIndex + 1 }}" />
+          </div>
+        </template>
+        <template v-else-if="itemsPerSlide === 2">
+          <div class="certificate-item" v-for="n in [currentIndex + 1, currentIndex + 2]" :key="n">
+            <img v-if="n <= totalItems" src="/public/images/sertifikat.png" :alt="`Сертификат ${n}`" />
+          </div>
+        </template>
+        <template v-else>
+          <div class="certificate-item" v-for="n in totalItems" :key="n">
+            <img src="/public/images/sertifikat.png" :alt="`Сертификат ${n}`" />
+          </div>
+        </template>
       </div>
       <button class="nav-btn next" @click="nextSlide" v-show="!showAllCertificates && windowWidth > 768">&gt;</button>
     </div>
@@ -33,10 +36,7 @@ const totalItems = 4; // Total number of certificates
 
 // For swipe functionality
 let startX = 0;
-let currentTranslate = 0;
-let prevTranslate = 0;
 let isDragging = false;
-let animationFrameId = null;
 
 const updateWindowWidth = () => {
   windowWidth.value = window.innerWidth;
@@ -44,143 +44,100 @@ const updateWindowWidth = () => {
 
 const updateItemsPerSlide = () => {
   const width = windowWidth.value;
-  if (width > 1024) { // Adjusted breakpoint to show all 4 on wider screens
-     itemsPerSlide.value = 4; // Show all 4 on screens wider than 1024px
-  } else if (width <= 375) {
+  if (width <= 480) {
     itemsPerSlide.value = 1;
-  } else if (width <= 768) {
+  } else if (width <= 900) {
     itemsPerSlide.value = 2;
-  } else if (width <= 1024) { // Between 769px and 1024px
+  } else if (width <= 1200) {
     itemsPerSlide.value = 3;
+  } else {
+    itemsPerSlide.value = 4;
   }
 };
 
-const showAllCertificates = computed(() => itemsPerSlide.value === totalItems);
+const showAllCertificates = computed(() => itemsPerSlide.value >= totalItems);
 
 const nextSlide = () => {
-  if (certificatesContainer.value) {
-    const maxIndex = totalItems - itemsPerSlide.value;
-    if (maxIndex < 0) return; // Prevent sliding if all items are visible
-    currentIndex.value = (currentIndex.value + 1) % (maxIndex + 1);
-    updateCarousel();
+  const maxIndex = totalItems - itemsPerSlide.value;
+  if (maxIndex < 0) return;
+  if (currentIndex.value < maxIndex) {
+    currentIndex.value++;
+  } else {
+    currentIndex.value = 0;
   }
+  updateCarousel();
 };
 
 const prevSlide = () => {
-  if (certificatesContainer.value) {
-    const maxIndex = totalItems - itemsPerSlide.value;
-     if (maxIndex < 0) return; // Prevent sliding if all items are visible
-    currentIndex.value = (currentIndex.value - 1 + maxIndex + 1) % (maxIndex + 1);
-    updateCarousel();
+  const maxIndex = totalItems - itemsPerSlide.value;
+  if (maxIndex < 0) return;
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+  } else {
+    currentIndex.value = maxIndex;
   }
+  updateCarousel();
 };
 
 const updateCarousel = () => {
   if (certificatesContainer.value && !showAllCertificates.value) {
-    const itemWidth = certificatesContainer.value.querySelector('.certificate-item').offsetWidth;
-    const offset = -currentIndex.value * itemWidth;
-    currentTranslate = offset; // Update currentTranslate for swipe
-    setSliderPosition();
+    if (itemsPerSlide.value === 1 || itemsPerSlide.value === 2) {
+      certificatesContainer.value.style.transform = '';
+    } else {
+      const item = certificatesContainer.value.querySelector('.certificate-item');
+      const itemWidth = item.offsetWidth;
+      const containerWidth = certificatesContainer.value.offsetWidth;
+      let visible = itemsPerSlide.value;
+      let offset = -currentIndex.value * itemWidth + (containerWidth - visible * itemWidth) / 2;
+      certificatesContainer.value.style.transform = `translateX(${offset}px)`;
+    }
   } else if (certificatesContainer.value && showAllCertificates.value) {
-     currentTranslate = 0; // Reset for non-carousel view
-     setSliderPosition();
+    certificatesContainer.value.style.transform = `translateX(0px)`;
   }
 };
 
-const setSliderPosition = () => {
-   if (certificatesContainer.value) {
-    certificatesContainer.value.style.transform = `translateX(${currentTranslate}px)`;
-   }
-};
-
-const animation = () => {
-  if (isDragging) {
-    setSliderPosition();
-    animationFrameId = requestAnimationFrame(animation);
-  }
-};
-
-// Swipe Handlers
+// Swipe Handlers (мобильная логика)
 const touchStart = (event) => {
-  if (showAllCertificates.value || windowWidth.value > 768) return; // Only swipe on smaller screens
+  if (windowWidth.value > 900) return; // Только на мобильных/планшетах
   isDragging = true;
   startX = event.touches[0].clientX;
-  certificatesContainer.value.style.transition = 'none'; // Disable smooth transition while dragging
-  animationFrameId = requestAnimationFrame(animation);
 };
 
-const touchMove = (event) => {
+const touchEnd = (event) => {
   if (!isDragging) return;
-  const currentX = event.touches[0].clientX;
-  const moveDistance = startX - currentX;
-  currentTranslate = prevTranslate - moveDistance;
-
-  // Optional: Add boundaries to prevent excessive swiping
-  const containerWidth = certificatesContainer.value.offsetWidth;
-  const contentWidth = certificatesContainer.value.scrollWidth;
-  const maxTranslate = 0;
-  const minTranslate = containerWidth - contentWidth;
-
-   if (currentTranslate > maxTranslate) {
-    currentTranslate = maxTranslate; // Clamp at left boundary
-  } else if (currentTranslate < minTranslate) {
-     currentTranslate = minTranslate; // Clamp at right boundary
-  }
-};
-
-const touchEnd = () => {
-  if (!isDragging) return;
-  cancelAnimationFrame(animationFrameId);
   isDragging = false;
-  certificatesContainer.value.style.transition = 'transform 0.3s ease'; // Re-enable smooth transition
-
-  const movedBy = currentTranslate - prevTranslate;
-
-  // Determine swipe direction and trigger slide change
-  if (movedBy < -50) { // Swiped left (next)
+  const endX = event.changedTouches[0].clientX;
+  const deltaX = endX - startX;
+  if (deltaX < -50) {
     nextSlide();
-  } else if (movedBy > 50) { // Swiped right (prev)
+  } else if (deltaX > 50) {
     prevSlide();
-  } else {
-    // If swipe wasn't enough, snap back to the current item
-    updateCarousel();
   }
-  prevTranslate = currentTranslate; // Save final position
 };
 
 onMounted(() => {
   updateWindowWidth();
   updateItemsPerSlide();
-  updateCarousel(); // Initial carousel position
-
-  // Add resize listener
+  updateCarousel();
   window.addEventListener('resize', () => {
     updateWindowWidth();
     updateItemsPerSlide();
     updateCarousel();
   });
-
-  // Add touch listeners
   if (certificatesContainer.value) {
     certificatesContainer.value.addEventListener('touchstart', touchStart);
-    certificatesContainer.value.addEventListener('touchmove', touchMove);
     certificatesContainer.value.addEventListener('touchend', touchEnd);
   }
-  windowWidth.value = window.innerWidth; // Set actual window width after mount
 });
 
 onUnmounted(() => {
-  // Remove resize listener
   window.removeEventListener('resize', () => {
     updateWindowWidth();
     updateItemsPerSlide();
     updateCarousel();
   });
-
-  // Remove touch listeners
   if (certificatesContainer.value) {
     certificatesContainer.value.removeEventListener('touchstart', touchStart);
-    certificatesContainer.value.removeEventListener('touchmove', touchMove);
     certificatesContainer.value.removeEventListener('touchend', touchEnd);
   }
 });
@@ -188,9 +145,8 @@ onUnmounted(() => {
 
 <style scoped>
 .certificates-section{
-  margin-top: 100px;
   text-align: center;
-  overflow: hidden; /* Added for carousel */
+  overflow: hidden;
 }
 .section-title {
   text-align: center;
@@ -199,6 +155,27 @@ onUnmounted(() => {
 }
 .section-title.blue {
   color: #00aaff;
+  font-size: 45px;
+}
+@media (max-width: 1440px) {
+  .section-title.blue {
+    font-size: 40px;
+  }
+}
+@media (max-width: 1024px) {
+  .section-title.blue {
+    font-size: 40px;
+  }
+}
+@media (max-width: 768px) {
+  .section-title.blue {
+    font-size: 28px;
+  }
+}
+@media (max-width: 430px) {
+  .section-title.blue {
+    font-size: 20px;
+  }
 }
 
 .carousel-wrapper {
@@ -225,11 +202,11 @@ onUnmounted(() => {
 }
 
 .certificate-item {
-  flex: 0 0 calc(100% / 4); /* Default: show all 4 */
+  flex: 0 0 calc(100% / 4);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 10px; /* Added padding for spacing */
+  padding: 0 10px;
 }
 
 .certificates img {
@@ -305,36 +282,22 @@ onUnmounted(() => {
       }
  }
 
-@media (max-width: 1024px) {
-   .section-title {
-     font-size: 36px;
-     margin-bottom: 40px;
-   }
-   .certificates {
-     gap: 20px;
-   }
-   .certificates img {
-    /* Adjusted max-width for 3 items */
-   }
-    .certificate-item {
-      flex: 0 0 calc(100% / 3); /* Show 3 items */
-    }
- }
+@media (max-width: 1200px) {
+  .certificate-item {
+    flex: 0 0 calc(100% / 3);
+  }
+}
 
 @media (max-width: 900px) {
   .section-title {
-    
     margin-bottom: 30px;
   }
   .certificates {
     gap: 16px;
   }
-  .certificates img {
-
-
-   .certificate-item {
-      flex: 0 0 calc(100% / 2); /* Show 2 items */
-    }
+  .certificate-item {
+    flex: 0 0 calc(100% / 2);
+  }
 }
 
 @media (max-width: 768px) {
@@ -342,7 +305,6 @@ onUnmounted(() => {
   .certificate-item {
     flex: 0 0 calc(100% / 2); /* Show 2 items on touch devices */
   }
-  
 }
 
 @media (max-width: 480px) {
@@ -350,17 +312,10 @@ onUnmounted(() => {
     margin-top: 40px;
   }
   .section-title {
-  
     margin-bottom: 16px;
   }
-
-   .nav-btn {
-     width: 30px;
-     height: 30px;
-     font-size: 16px;
-   }
   .certificate-item {
-    flex: 0 0 100%; /* Show 1 item */
+    flex: 0 0 100%;
   }
 }
 
@@ -380,8 +335,16 @@ onUnmounted(() => {
     flex: 0 0 100%;
   }
 }
+
+.carousel-wrapper .nav-btn {
+  display: block;
 }
 
+@media (max-width: 900px) {
+  .carousel-wrapper .nav-btn {
+    display: none;
+  }
+}
 </style>
 
  

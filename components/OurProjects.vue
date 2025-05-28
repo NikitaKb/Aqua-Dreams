@@ -273,14 +273,15 @@ const prevSlide = () => {
 
 <style scoped>
 .our-projects {
-  padding: 80px 0;
+  padding-left: 0;
+  padding-right: 0;
   background: #fff;
 }
 
 .container {
   max-width: 1360px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 10px;
 }
 
 .section-title {
@@ -557,7 +558,8 @@ const prevSlide = () => {
 
 @media (max-width: 480px) {
   .our-projects {
-    padding: 40px 0;
+  
+
   }
 
   .section-title {

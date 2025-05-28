@@ -43,7 +43,8 @@
 
 <style scoped>
 .experience {
-  padding: 60px 20px;
+  padding-left: 0;
+  padding-right: 0;
   background: #fff;
 }
 
@@ -224,5 +225,10 @@
   .text {
     font-size: 11px;
   }
+}
+
+.experience-block {
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>

@@ -20,7 +20,8 @@
 
 <style scoped>
 .about-section {
-  padding: 60px 20px;
+  padding-left: 10px;
+  padding-right: 10px;
   background-color: #fff;
 }
 
@@ -95,7 +96,8 @@
 }
 @media (max-width: 480px) {
   .about-section {
-    padding: 24px 4px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .about-text h2 {
     font-size: 20px;
@@ -106,7 +108,8 @@
 }
 @media (max-width: 375px) {
   .about-section {
-    padding: 12px 2px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
   .about-text h2 {
     font-size: 16px;

@@ -140,7 +140,7 @@ body {
 .button-primary:hover {
   background: #23A3FF;
   color: white;
-}
+ }
 
 h1 {
   font-size: calc(4rem * var(--scale-factor));
@@ -188,7 +188,7 @@ h6 {
   line-height: 1.2;
   transform-origin: center;
   transform: scale(var(--scale-factor));
-}
+} */
 
 main {
   

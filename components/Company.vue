@@ -207,7 +207,8 @@ onUnmounted(() => {
 <style scoped>
 .partners-container {
   text-align: center;
-  padding: 40px 20px;
+  padding-left: 20px;
+  padding-right: 20px;
   overflow: hidden;
 }
 
@@ -340,10 +341,15 @@ onUnmounted(() => {
   right: 10px;
 }
 
+@media (max-width: 1440px) {
+  .partners-title {
+    font-size: 40px;
+  }
+}
+
 @media (max-width: 1024px) {
   .partners-title {
-    font-size: 36px;
-    margin-bottom: 40px;
+    font-size: 40px;
   }
   .partners-logos {
     gap: 30px;
