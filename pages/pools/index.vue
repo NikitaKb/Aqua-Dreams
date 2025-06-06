@@ -11,8 +11,17 @@
 </template>
 
 <script setup>
+import { useHead } from '#imports'
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+
+useHead({
+  title: 'Бассейны от AquaDreams - Проектирование и строительство',
+  meta: [
+    { name: 'description', content: 'Профессиональное проектирование и строительство бассейнов любой сложности. Индивидуальный подход, современные технологии и гарантия качества от AquaDreams.' },
+    { name: 'keywords', content: 'бассейны, строительство бассейнов, проектирование бассейнов, частные бассейны, общественные бассейны' }
+  ]
+})
 </script>
 
 <style scoped>

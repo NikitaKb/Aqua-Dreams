@@ -13,12 +13,14 @@
               <NuxtLink to="/pools" class="nav-link">БАССЕЙНЫ</NuxtLink>
               <transition name="dropdown">
                 <div v-show="activeDropdown === 'pools'" class="dropdown-menu pools-dropdown">
-                  <NuxtLink to="/pools/concrete" class="dropdown-item">Бетонный бассейн</NuxtLink>
-                  <NuxtLink to="/pools/composite" class="dropdown-item">Композитный бассейн</NuxtLink>
-                  <NuxtLink to="/pools/karkasnye-bassejny-fun" class="dropdown-item">Каркасные бассейны</NuxtLink>
-                  <NuxtLink to="/pools/karkasnye-bassejny-fun" class="dropdown-item">Fun Бассейн</NuxtLink>
-                  <NuxtLink to="/pools/bassejn-iz-plastikovyh-polimernyh-panelej" class="dropdown-item">Бассейн из пластиковых полимерных панелей</NuxtLink>
-                  <NuxtLink to="/pools/bassejn-iz-nesyomnoj-betonnoj-opalubki" class="dropdown-item">Бассейн из несъёмной бетонной опалубки</NuxtLink>
+                  <NuxtLink
+                    v-for="pool in pools"
+                    :key="pool.slug"
+                    :to="`/pools/${pool.slug}`"
+                    class="dropdown-item"
+                  >
+                    {{ pool.name }}
+                  </NuxtLink>
                 </div>
               </transition>
             </li>
@@ -26,12 +28,14 @@
               <NuxtLink to="/termo" class="nav-link">ТЕРМА-ЗОНЫ</NuxtLink>
               <transition name="dropdown">
                 <div v-show="activeDropdown === 'termo'" class="dropdown-menu termo-dropdown">
-                  <NuxtLink to="/termo/saunas" class="dropdown-item">Сауны</NuxtLink>
-                  <NuxtLink to="/termo/hammams" class="dropdown-item">Хамамы</NuxtLink>
-                  <NuxtLink to="/termo/baths" class="dropdown-item">Купели</NuxtLink>
-                  <NuxtLink to="/termo/steam" class="dropdown-item">Бани</NuxtLink>
-                  <NuxtLink to="/termo/experience" class="dropdown-item">Душ впечатлений</NuxtLink>
-                  <NuxtLink to="/termo/grands" class="dropdown-item">Grands</NuxtLink>
+                  <NuxtLink
+                    v-for="termo in termoTypes"
+                    :key="termo.slug"
+                    :to="`/termo/${termo.slug}`"
+                    class="dropdown-item"
+                  >
+                    {{ termo.name }}
+                  </NuxtLink>
                 </div>
               </transition>
             </li>
@@ -75,12 +79,34 @@
 import { ref, onMounted, onUnmounted, defineProps } from 'vue'
 import { getApiUrl } from '~/config/api'
 
-const pools = ref([]);
+interface Pool {
+  name: string;
+  slug: string;
+}
+
+interface TermoType {
+  name: string;
+  slug: string;
+}
+
+const pools = ref<Pool[]>([])
+const termoTypes = ref<TermoType[]>([])
 
 onMounted(async () => {
-  const res = await fetch(getApiUrl('/api/pools/'));
-  pools.value = await res.json();
-});
+  try {
+    const res = await fetch(getApiUrl('/api/pools/'))
+    pools.value = await res.json()
+  } catch (e) {
+    pools.value = []
+  }
+  try {
+    const res = await fetch(getApiUrl('/api/terms/'))
+    termoTypes.value = await res.json()
+  } catch (e) {
+    termoTypes.value = []
+  }
+})
+
 const props = defineProps({
   staticWhite: Boolean,
 });
@@ -88,7 +114,7 @@ const props = defineProps({
 const isDark = ref(false)
 const isMenuOpen = ref(false)
 const activeDropdown = ref<string | null>(null)
-const SCROLL_THRESHOLD = 500
+const SCROLL_THRESHOLD = 1
 
 const handleScroll = () => {
   if (props.staticWhite) {

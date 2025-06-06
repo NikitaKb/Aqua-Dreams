@@ -285,7 +285,7 @@ const prevSlide = () => {
 }
 
 .section-title {
-  font-size: 48px;
+  font-size: 45px;
   color: #23A3FF;
   text-align: center;
   margin-bottom: 60px;
@@ -631,5 +631,31 @@ const prevSlide = () => {
   padding: 40px;
   font-size: 18px;
   color: #23A3FF;
+}
+
+@media (max-width: 1440px) {
+  .section-title {
+    font-size: 40px;
+  }
+}
+@media (max-width: 1024px) {
+  .section-title {
+    font-size: 40px;
+  }
+}
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 28px;
+  }
+}
+@media (max-width: 430px) {
+  .section-title {
+    font-size: 20px;
+  }
+}
+@media (max-width: 375px) {
+  .section-title {
+    font-size: 20px;
+  }
 }
 </style> 

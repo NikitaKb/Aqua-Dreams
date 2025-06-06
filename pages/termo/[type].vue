@@ -2,7 +2,7 @@
   <div>
     <Header static-white />
     <TermoDetailsPage :type="type" />
-    <Contacts />
+    <Contacts class="mt-100" />
   </div>
 </template>
 
@@ -15,6 +15,9 @@ const type = route.params.type as string;
 </script>
 
 <style scoped>
+.mt-100 {
+  margin-top: 100px;
+}
 div {
 
   display: flex;

@@ -337,6 +337,10 @@ export default {
   color: #888;
   margin-bottom: 18px;
 }
+.product-breadcrumbs a {
+  text-decoration: none !important;
+  color: inherit !important;
+}
 .product-section-title {
   font-size: 36px;
   font-weight: 500;

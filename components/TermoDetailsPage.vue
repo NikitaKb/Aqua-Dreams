@@ -420,13 +420,13 @@ async function fetchTermoData(type: string) {
     width: 100%;
   }
   .pool-info-block {
-    align-items: center;
+ 
   }
   .pool-title,
   .pool-description {
   }
   .pool-consult-btn {
-    align-self: center;
+  
   }
   .advantages-columns {
     flex-direction: column;

@@ -19,9 +19,9 @@
           </div>
           
           <div class="contact-group">
-            <a href="tel:+79897089625" class="contact-item">
+            <a href="tel:+79185368648" class="contact-item">
               <img src="/images/phone.svg" alt="Телефон" class="contact-icon">
-              <span class="contact-text">+7 (989) 708-96-25</span>
+              <span class="contact-text">+7 (918) 536-86-48</span>
             </a>
             
             <a href="mailto:info@aquadreams.ru" class="contact-item">
@@ -36,7 +36,7 @@
             <a href="https://t.me/aquadreamsrostov" class="social-link">
               <img src="/images/telegram.svg" alt="Telegram" class="social-icon social-icon-telegram">
             </a>
-            <a href="https://wa.me/79897089625" class="social-link">
+            <a href="https://wa.me/79185368648" class="social-link">
               <img src="/images/whatsapp.svg" alt="WhatsApp" class="social-icon">
             </a>
             <a href="#" class="social-link">

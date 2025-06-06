@@ -1,7 +1,15 @@
 <script setup lang="ts">
+import { useHead } from '#imports'
 import Certificates from '~/components/Certificates.vue';
 import Header from '~/components/Header.vue'; // Import the Header component
 
+useHead({
+  title: 'О компании AquaDreams - Наш опыт и достижения',
+  meta: [
+    { name: 'description', content: 'Узнайте больше о компании AquaDreams - лидере в области проектирования и строительства бассейнов и терма-зон. Наш опыт, сертификаты и реализованные проекты.' },
+    { name: 'keywords', content: 'о компании AquaDreams, опыт строительства бассейнов, сертификаты, реализованные проекты' }
+  ]
+})
 </script>
 
 <template>
