@@ -20,8 +20,10 @@ useHead({
     <ExperienceBlock class="section-spacing" />
     <Company class="section-spacing" />
     <Certificates class="section-spacing" />
-    <OurProjects class="section-spacing" />
+    <Portfolio class="section-spacing" />
     <Contacts class="section-spacing" />
+
+    
   </main>
 
 </template>
