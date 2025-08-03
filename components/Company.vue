@@ -26,11 +26,7 @@
             <img src="/public/images/fun.png" alt="Fun Group" />
           </a>
         </div>
-        <div class="logo-item">
-          <a href="https://www.composit.com" target="_blank" rel="noopener noreferrer">
-            <img src="/public/images/comp.png" alt="Composit" />
-          </a>
-        </div>
+        
         <div class="logo-item">
           <a href="https://kedrprom.ru/" target="_blank" rel="noopener noreferrer">
             <img src="/public/images/cedr.png" alt="Кедр Пром" />
@@ -38,7 +34,7 @@
         </div>
         <div class="logo-item">
           <a href="https://xn----8sbccpd2a6a3aea7j.xn--p1ai/info/brands/grandis/" target="_blank" rel="noopener noreferrer">
-            <img src="/public/images/gran.png" alt="Grandis" />
+            <img src="/public/images/grandis.png" alt="Grandis" />
           </a>
         </div>
       </div>

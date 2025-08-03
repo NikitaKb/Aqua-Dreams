@@ -1,19 +1,34 @@
 <template>
-  <section class="hero">
+  <section class="hero" :class="{ 'bg-loaded': backgroundLoaded }">
     <div class="container">
       <div class="hero-content">
-        <img src="/images/wave-logo.svg" alt="Aqua Dreams" class="hero-logo" />
+        <img src="/images/wave-logo.svg" alt="Aqua Dreams" class="hero-logo" loading="lazy" />
         <p class="hero-subtitle">ВАШ ПУТЬ К ИДЕАЛЬНОМУ БАССЕЙНУ</p>
       </div>
     </div>
   </section>
 </template>
 
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const backgroundLoaded = ref(false);
+
+onMounted(() => {
+  // Ленивая загрузка фонового изображения
+  const bgImage = new Image();
+  bgImage.onload = () => {
+    backgroundLoaded.value = true;
+  };
+  bgImage.src = '/images/pool-bg.jpg';
+});
+</script>
+
 <style scoped>
 .hero {
   height: 100vh;
   width: 100vw;
-  background-image: url('/images/pool-bg.jpg');
+  background-color: #000;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -21,6 +36,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-image 0.3s ease;
+}
+
+.hero.bg-loaded {
+  background-image: url('/images/pool-bg.jpg');
 }
 
 .hero::before {

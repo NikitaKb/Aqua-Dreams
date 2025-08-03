@@ -1,10 +1,16 @@
 <template>
   <div>
-    <Header />
-    <main>
-      <NuxtPage />
-    </main>
-    <Footer />
+    <!-- Загрузочный экран -->
+    <LoadingScreen :is-loading="$isLoading.value" />
+    
+    <!-- Основной контент -->
+    <div v-show="!$isLoading.value" class="main-content">
+      <Header />
+      <main>
+        <NuxtPage />
+      </main>
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -190,10 +196,25 @@ h6 {
   transform: scale(var(--scale-factor));
 } */
 
+.main-content {
+  opacity: 0;
+  animation: fadeInContent 0.8s ease-out forwards;
+}
+
 main {
-  
   width: 100%;
   overflow-x: hidden;
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Media Queries для масштабирования */

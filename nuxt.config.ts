@@ -3,6 +3,32 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   
+  // Оптимизация производительности
+  nitro: {
+    compressPublicAssets: true,
+    minify: true,
+  },
+  
+  // Оптимизация изображений
+  modules: [
+    '@nuxt/image'
+  ],
+  
+  // Оптимизация CSS
+  css: [
+    '~/assets/css/main.css'
+  ],
+  
+  // Оптимизация загрузки
+  experimental: {
+    payloadExtraction: false,
+  },
+  
+  // Оптимизация сборки
+  build: {
+    transpile: ['swiper'],
+  },
+  
   // SEO настройки
   app: {
     head: {
@@ -27,7 +53,9 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: 'Строительство бассейнов и термо в Ростове-на-Дону' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }
       ]
     }
   }
