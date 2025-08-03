@@ -94,7 +94,7 @@ function updateItemsPerSlide() {
 
 async function fetchProjects() {
   try {
-    const response = await fetch(getApiUrl('/api/project/'))
+    const response = await fetch(getApiUrl('/api/project/projects'))
     const data = await response.json()
     projects.value = data.map(project => ({
       ...project,

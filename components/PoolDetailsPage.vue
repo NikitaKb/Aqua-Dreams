@@ -21,7 +21,7 @@
           </div>
         <div class="pool-info-block">
           <h3 class="pool-title">{{ poolData.name }}</h3>
-          <p class="pool-description">{{ poolData.description_short }}</p>
+          <p class="pool-description">{{ poolData.description }}</p>
           <button class="pool-consult-btn" @click="showConsultModal = true">Бесплатная консультация</button>
         </div>
       </div>
@@ -259,9 +259,10 @@ async function fetchPoolData(type: string) {
 .pool-main-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 24px;
   display: block;
+  background-color: #f5f5f5;
 }
 
 .slider-arrow {

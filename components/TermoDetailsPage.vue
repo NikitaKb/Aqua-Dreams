@@ -5,10 +5,11 @@
         <div class="pool-image-block">
           <div class="pool-slider">
             <img :src="currentImage" :alt="termoData.name" class="pool-main-image" />
-            <button v-if="termoData.images && termoData.images.length > 1" class="slider-arrow left" @click="prevImage">&#60;</button>
-            <button v-if="termoData.images && termoData.images.length > 1" class="slider-arrow right" @click="nextImage">&#62;</button>
+            <button v-if="termoData.images && termoData.images.length > 1 && !isMobile" class="slider-arrow left" @click="prevImage">&#60;</button>
+            <button v-if="termoData.images && termoData.images.length > 1 && !isMobile" class="slider-arrow right" @click="nextImage">&#62;</button>
           </div>
-          <div class="slider-dots" v-if="termoData.images && termoData.images.length > 1">
+        </div>
+        <div class="slider-dots" v-if="termoData.images && termoData.images.length > 1 && isMobile">
             <span
               v-for="(image, index) in termoData.images"
               :key="index"
@@ -17,10 +18,9 @@
               @click="goToImage(index)"
             ></span>
           </div>
-        </div>
         <div class="pool-info-block">
           <h3 class="pool-title">{{ termoData.name }}</h3>
-          <p class="pool-description">{{ termoData.description_short }}</p>
+          <p class="pool-description">{{ termoData.description }}</p>
           <button class="pool-consult-btn" @click="showConsultModal = true">Бесплатная консультация</button>
         </div>
       </div>

@@ -1,7 +1,7 @@
 <template>
   <section class="pool-types">
     <div class="container">
-      <h2 class="section-title">Виды бассейнов</h2>
+      <h2 class="section-title">Виды термо</h2>
       <p class="section-subtitle">Ваш уголок отдыха и гармонии прямо у дома.</p>
       
       <div class="pool-cards">

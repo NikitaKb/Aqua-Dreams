@@ -7,25 +7,39 @@
       <button class="nav-btn prev" @click="prevSlide" v-show="!showAllLogos && windowWidth > 768">&lt;</button>
       <div class="partners-logos" ref="logosContainer">
         <div class="logo-item">
-          <img src="/public/images/sj.png" alt="San Juan" />
+          <a href="https://www.sanjuanpools.com" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/sj.png" alt="San Juan" />
+          </a>
         </div>
         <div class="logo-item">
-          <img src="/public/images/ps.png" alt="Poolsar" />
+          <a href="https://www.poolsar.com" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/ps.png" alt="Poolsar" />
+          </a>
         </div>
         <div class="logo-item">
-          <img src="/public/images/com.png" alt="Compass" />
+          <a href="https://composit.by/" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/compositlogo.svg" alt="Compass" />
+          </a>
         </div>
         <div class="logo-item">
-          <img src="/public/images/fun.png" alt="Fun Group" />
+          <a href="https://fungroup64.ru/" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/fun.png" alt="Fun Group" />
+          </a>
         </div>
         <div class="logo-item">
-          <img src="/public/images/comp.png" alt="Composit" />
+          <a href="https://www.composit.com" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/comp.png" alt="Composit" />
+          </a>
         </div>
         <div class="logo-item">
-          <img src="/public/images/cedr.png" alt="Кедр Пром" />
+          <a href="https://kedrprom.ru/" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/cedr.png" alt="Кедр Пром" />
+          </a>
         </div>
         <div class="logo-item">
-          <img src="/public/images/gran.png" alt="Grandis" />
+          <a href="https://xn----8sbccpd2a6a3aea7j.xn--p1ai/info/brands/grandis/" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/gran.png" alt="Grandis" />
+          </a>
         </div>
       </div>
       <button class="nav-btn next" @click="nextSlide" v-show="!showAllLogos && windowWidth > 768">&gt;</button>
@@ -250,6 +264,18 @@ onUnmounted(() => {
   justify-content: center;
   align-items: center;
   padding: 0 10px;
+}
+
+.logo-item a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.logo-item a:hover {
+  transform: scale(1.05);
 }
 
 /* Styles for showing all logos on wider screens */

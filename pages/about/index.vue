@@ -4,10 +4,13 @@ import Certificates from '~/components/Certificates.vue';
 import Header from '~/components/Header.vue'; // Import the Header component
 
 useHead({
-  title: 'О компании AquaDreams - Наш опыт и достижения',
+  title: 'О компании AD - Опыт строительства бассейнов и термо',
   meta: [
-    { name: 'description', content: 'Узнайте больше о компании AquaDreams - лидере в области проектирования и строительства бассейнов и терма-зон. Наш опыт, сертификаты и реализованные проекты.' },
-    { name: 'keywords', content: 'о компании AquaDreams, опыт строительства бассейнов, сертификаты, реализованные проекты' }
+    { name: 'description', content: 'Узнайте больше о компании AD - лидере в области проектирования и строительства бассейнов и термо. Наш опыт, сертификаты и реализованные проекты в Ростове-на-Дону.' },
+    { name: 'keywords', content: 'о компании AD, опыт строительства бассейнов, сертификаты, реализованные проекты, Ростов-на-Дону' },
+    { property: 'og:title', content: 'О компании AD - Опыт строительства бассейнов' },
+    { property: 'og:description', content: 'Узнайте больше о компании AD - лидере в области проектирования и строительства бассейнов и термо.' },
+    { property: 'og:type', content: 'website' }
   ]
 })
 </script>
