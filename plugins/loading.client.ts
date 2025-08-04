@@ -1,4 +1,4 @@
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp) => {
   const isLoading = ref(true);
   
   // Функция для скрытия загрузочного экрана
@@ -41,29 +41,45 @@ export default defineNuxtPlugin(() => {
     });
   };
   
-  // Скрываем загрузочный экран когда страница и все изображения загружены
+  // Функция для обработки загрузки страницы
+  const handlePageLoad = async () => {
+    // Ждем загрузки всех изображений
+    await waitForImages();
+    // Небольшая задержка для плавности
+    setTimeout(() => {
+      hideLoading();
+    }, 300);
+  };
+  
   if (process.client) {
+    // Инициализация при первой загрузке
     const initializeLoading = async () => {
-      // Ждем загрузки DOM
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', async () => {
-          // Ждем загрузки всех изображений
-          await waitForImages();
-          // Небольшая задержка для плавности
-          setTimeout(() => {
-            hideLoading();
-          }, 500);
-        });
+        document.addEventListener('DOMContentLoaded', handlePageLoad);
       } else {
-        // DOM уже загружен, ждем только изображения
-        await waitForImages();
-        setTimeout(() => {
-          hideLoading();
-        }, 500);
+        await handlePageLoad();
       }
     };
     
     initializeLoading();
+    
+    // Отслеживаем навигацию между страницами
+    nuxtApp.hook('page:start', () => {
+      showLoading();
+    });
+    
+    nuxtApp.hook('page:finish', async () => {
+      await handlePageLoad();
+    });
+    
+    // Отслеживаем изменения маршрута
+    const router = useRouter();
+    router.beforeEach((to, from, next) => {
+      if (from.path !== to.path) {
+        showLoading();
+      }
+      next();
+    });
   }
   
   return {

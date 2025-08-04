@@ -1,3 +1,5 @@
+import { useHead } from '#imports';
+
 export const useSeo = () => {
   const setPageMeta = (meta: {
     title?: string;
@@ -8,53 +10,19 @@ export const useSeo = () => {
     ogImage?: string;
     canonical?: string;
   }) => {
-    const { $head } = useNuxtApp();
-    
-    if (meta.title) {
-      $head.title = meta.title;
-    }
-    
-    if (meta.description) {
-      $head.meta.push({
-        name: 'description',
-        content: meta.description
-      });
-    }
-    
-    if (meta.keywords) {
-      $head.meta.push({
-        name: 'keywords',
-        content: meta.keywords
-      });
-    }
-    
-    if (meta.ogTitle) {
-      $head.meta.push({
-        property: 'og:title',
-        content: meta.ogTitle
-      });
-    }
-    
-    if (meta.ogDescription) {
-      $head.meta.push({
-        property: 'og:description',
-        content: meta.ogDescription
-      });
-    }
-    
-    if (meta.ogImage) {
-      $head.meta.push({
-        property: 'og:image',
-        content: meta.ogImage
-      });
-    }
-    
-    if (meta.canonical) {
-      $head.link.push({
-        rel: 'canonical',
-        href: meta.canonical
-      });
-    }
+    useHead({
+      title: meta.title,
+      meta: [
+        meta.description ? { name: 'description', content: meta.description } : undefined,
+        meta.keywords ? { name: 'keywords', content: meta.keywords } : undefined,
+        meta.ogTitle ? { property: 'og:title', content: meta.ogTitle } : undefined,
+        meta.ogDescription ? { property: 'og:description', content: meta.ogDescription } : undefined,
+        meta.ogImage ? { property: 'og:image', content: meta.ogImage } : undefined,
+      ].filter(Boolean),
+      link: meta.canonical
+        ? [{ rel: 'canonical', href: meta.canonical }]
+        : [],
+    });
   };
 
   return {

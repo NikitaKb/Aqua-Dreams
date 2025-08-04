@@ -57,7 +57,7 @@ function getShortDescription(desc) {
   padding-top: 86px;
   
   
-margin-top: 100px;
+
 }
 
 .container {

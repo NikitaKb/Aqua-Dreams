@@ -12,8 +12,8 @@
           </a>
         </div>
         <div class="logo-item">
-          <a href="https://www.poolsar.com" target="_blank" rel="noopener noreferrer">
-            <img src="/public/images/ps.png" alt="Poolsar" />
+          <a href="https://poolsar.blue/" target="_blank" rel="noopener noreferrer">
+            <img src="/public/images/polsar.svg" alt="Poolsar" />
           </a>
         </div>
         <div class="logo-item">
@@ -33,7 +33,7 @@
           </a>
         </div>
         <div class="logo-item">
-          <a href="https://xn----8sbccpd2a6a3aea7j.xn--p1ai/info/brands/grandis/" target="_blank" rel="noopener noreferrer">
+          <a href="https://grandis-belarus.by/" target="_blank" rel="noopener noreferrer">
             <img src="/public/images/grandis.png" alt="Grandis" />
           </a>
         </div>
@@ -304,7 +304,7 @@ onUnmounted(() => {
   width: auto;
   height: auto;
   /* Prevent image dragging conflicts */
-  user-drag: none;
+ 
   -webkit-user-drag: none;
   user-select: none;
   -moz-user-select: none;

@@ -453,24 +453,73 @@ const handleSubmit = async (): Promise<void> => {
 
 @media (max-width: 768px) {
   .contacts {
+    /* display: none;  УБРАНО чтобы компонент был видимым */
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 40px;
+  }
+
+  .contacts-content {
+    flex-direction: column;
+    gap: 16px;
+    align-items: stretch;
+  }
+
+  .contacts-form {
+    max-width: 100%;
+    padding: 0 8px;
+  }
+
+  .contacts-map {
+    height: 220px;
+    width: 100%;
+    min-width: 0;
+    margin-top: 16px;
     display: none;
   }
 
   .contacts-title {
-    font-size: 42px;
+    font-size: 24px;
+    margin-bottom: 8px;
   }
 
   .contacts-subtitle {
-    font-size: 16px;
+    font-size: 14px;
+    margin-bottom: 16px;
   }
 
-  .contacts-map {
-    height: 300px;
+  .form {
+    margin-bottom: 16px;
+    max-width: 100%;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-input {
+    height: 40px;
+    font-size: 14px;
+    padding: 0 12px;
+  }
+
+  .submit-button {
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    margin-top: 12px;
   }
 
   .contact-items {
     flex-direction: column;
-    gap: 16px;
+    gap: 10px;
+  }
+
+  .contact-item {
+    gap: 8px;
+  }
+
+  .contact-icon {
+    width: 28px;
+    height: 28px;
   }
 }
 

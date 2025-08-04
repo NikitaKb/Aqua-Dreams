@@ -39,9 +39,7 @@
             <a href="https://wa.me/79185368648" class="social-link">
               <img src="/images/whatsapp.svg" alt="WhatsApp" class="social-icon">
             </a>
-            <a href="#" class="social-link">
-              <img src="/images/instagram.svg" alt="Instagram" class="social-icon">
-            </a>
+           
           </div>
         </div>
       </div>

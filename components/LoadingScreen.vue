@@ -4,10 +4,7 @@
       <div class="logo-container">
         <img src="/images/logo_dark.svg" alt="AD Logo" class="loading-logo" />
       </div>
-      <div class="loading-text">
-        <h2>AD - Бассейны и термо</h2>
-        <p>Загрузка...</p>
-      </div>
+    
       <div class="loading-spinner">
         <div class="spinner-ring"></div>
         <div class="spinner-ring"></div>
@@ -37,7 +34,8 @@ defineProps<Props>();
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  animation: fadeIn 0.5s ease-in-out;
+  animation: fadeIn 0.3s ease-out;
+  backdrop-filter: blur(5px);
 }
 
 .loading-content {
@@ -52,21 +50,24 @@ defineProps<Props>();
 .loading-logo {
   width: 120px;
   height: auto;
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .loading-text h2 {
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  animation: slideInUp 0.8s ease-out;
+  animation: slideInUp 0.5s ease-out;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .loading-text p {
   font-size: 1.1rem;
   opacity: 0.8;
   margin-bottom: 2rem;
-  animation: slideInUp 0.8s ease-out 0.2s both;
+  animation: slideInUp 0.5s ease-out 0.1s both;
+  font-weight: 500;
 }
 
 .loading-spinner {
@@ -83,7 +84,8 @@ defineProps<Props>();
   border: 3px solid transparent;
   border-top: 3px solid #23A3FF;
   border-radius: 50%;
-  animation: spin 1.2s linear infinite;
+  animation: spin 1s linear infinite;
+  box-shadow: 0 0 10px rgba(35, 163, 255, 0.3);
 }
 
 .spinner-ring:nth-child(1) {
@@ -114,8 +116,16 @@ defineProps<Props>();
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.05); opacity: 0.8; }
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1; 
+    filter: brightness(1);
+  }
+  50% { 
+    transform: scale(1.08); 
+    opacity: 0.9; 
+    filter: brightness(1.1);
+  }
 }
 
 @keyframes slideInUp {
@@ -132,9 +142,11 @@ defineProps<Props>();
 @keyframes fadeIn {
   from {
     opacity: 0;
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
+    transform: scale(1);
   }
 }
 
